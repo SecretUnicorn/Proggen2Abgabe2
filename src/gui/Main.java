@@ -23,7 +23,7 @@ public class Main extends Application  {
         setPrimaryStage(primaryStage);
         Parent root = FXMLLoader.load(getClass().getResource("style.fxml"));
         primaryStage.setTitle("Programmieren 2 Abgabe");
-        Scene scene = new Scene(root,400,400);
+        Scene scene = new Scene(root,921,457);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

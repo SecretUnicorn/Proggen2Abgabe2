@@ -1,13 +1,13 @@
 package gui;
 
+import javafx.beans.value.ChangeListener;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -30,13 +30,49 @@ public class Controller implements Initializable {
     public Pane window;
     public Stage stage = Main.getPrimaryStage();
     public Button btbUploadImage;
+    public ToggleButton toggleBlur;
+    public ToggleButton togglePixel;
+    public TextField textThreshold;
+    public ToggleButton toggleThreshhold;
+    public ColorPicker colorReplacement2;
+    public ToggleButton toggleReplacement;
+    public ToggleButton toggleColorband;
+    public ToggleButton toggleBandRed;
+    public ToggleButton toggleBandBlue;
+    public ToggleButton toggleBandGreen;
+    public ToggleButton toggleMonochrom;
+    public ToggleButton toggleMask;
+
+    public final ToggleGroup COLORBANDGROUP = new ToggleGroup();
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
+        toggleBandBlue.setToggleGroup(COLORBANDGROUP);
+        toggleBandGreen.setToggleGroup(COLORBANDGROUP);
+        toggleBandRed.setToggleGroup(COLORBANDGROUP);
     }
 
+    
+
+
     public void uploadImage(ActionEvent actionEvent) {
+        Image uploadImage = selectImage();
+        if (uploadImage != null){
+            btbUploadImage.setVisible(false);
+            imgInput.setImage(uploadImage);
+        }
+    }
+
+    public void uploadMask(ActionEvent actionEvent) {
+        Image uploadImage = selectImage();
+        if (uploadImage != null){
+            btbUploadMask.setVisible(false);
+            imgMask.setImage(uploadImage);
+        }
+    }
+
+    public Image selectImage(){
         File file;
         boolean imageFound = false;
         BufferedImage image = null;
@@ -52,19 +88,24 @@ public class Controller implements Initializable {
                 ImageIO.write(image,"bmp",new File(file.getAbsolutePath()));
                 imageFound = true;
             } catch (IOException e) {
-               Alert.display("File was not found!","File was not found!");
+                Alert.display("File was not found!","File was not found!");
             }
         }
-
-        Image uploadImage = SwingFXUtils.toFXImage(image, null);
+        Image uploadImage = null;
         if(imageFound){
-            btbUploadImage.setVisible(false);
-            imgInput.setImage(uploadImage);
+            uploadImage = SwingFXUtils.toFXImage(image, null);
         }
 
+        return uploadImage;
 
     }
 
-    public void uploadMask(ActionEvent actionEvent) {
+    public void applyFilters(MouseEvent mouseEvent) {
+        BufferedImage image = SwingFXUtils.fromFXImage(imgInput.getImage(), null);
+
+
+
     }
+
+
 }
