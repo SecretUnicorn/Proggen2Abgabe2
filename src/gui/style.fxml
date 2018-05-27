@@ -29,7 +29,7 @@
       <Separator layoutX="302.0" layoutY="60.0" prefHeight="4.0" prefWidth="324.0" />
       <Separator layoutX="302.0" layoutY="110.0" prefHeight="4.0" prefWidth="324.0" />
       <Label layoutX="312.0" layoutY="126.0" text="Threshhold" />
-      <ToggleButton fx:id="toggleBlur" layoutX="570.0" layoutY="18.0" mnemonicParsing="false" onAction="#addToQueue()" text="ON" />
+      <ToggleButton fx:id="toggleBlur" layoutX="570.0" layoutY="18.0" mnemonicParsing="false" text="ON" />
       <ToggleButton fx:id="togglePixel" layoutX="570.0" layoutY="73.0" mnemonicParsing="false" text="ON" />
       <TextField fx:id="textThreshold" layoutX="391.0" layoutY="120.0" prefHeight="27.0" prefWidth="140.0" />
       <Label layoutX="393.0" layoutY="147.0" text="(mehrere Werte mit Komma trennen)">
