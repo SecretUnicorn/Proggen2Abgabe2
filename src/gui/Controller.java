@@ -5,6 +5,9 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -13,13 +16,16 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable {
+public class Controller implements Initializable{
     public ImageView imgMask;
     public ImageView imgInput;
     public Button btbUploadMask;
@@ -44,6 +50,8 @@ public class Controller implements Initializable {
     public ToggleButton toggleMask;
 
     public final ToggleGroup COLORBANDGROUP = new ToggleGroup();
+    public Label textUrlImage;
+    public Label textUrlMask;
 
 
     @Override
@@ -86,6 +94,7 @@ public class Controller implements Initializable {
             try{
                 image = ImageIO.read(new File(file.getAbsolutePath()));
                 ImageIO.write(image,"bmp",new File(file.getAbsolutePath()));
+                textUrlImage.setText(file.getAbsolutePath());
                 imageFound = true;
             } catch (IOException e) {
                 Alert.display("File was not found!","File was not found!");
@@ -100,8 +109,40 @@ public class Controller implements Initializable {
 
     }
 
-    public void applyFilters(MouseEvent mouseEvent) {
-        BufferedImage image = SwingFXUtils.fromFXImage(imgInput.getImage(), null);
+    public void applyFilters(MouseEvent mouseEvent) throws IOException{
+        // BufferedImage image = SwingFXUtils.fromFXImage(imgInput.getImage(), null);
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(new File(textUrlImage.getText()));
+        } catch (IOException e){
+
+        }
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+        System.out.println(width+"<- ->"+height);
+
+        int [] pixel = new int[width*height];
+
+        for (int i = 0; i < width; i++) {
+           for (int l = 0; l < height; l++){
+                pixel[i+l] = image.getRGB(i,l);
+           }
+        }
+
+            BufferedWriter bw = null;
+            try{
+                bw = new BufferedWriter(new FileWriter("ausgabe.txt"));
+                System.out.println(pixel.length);
+                for (int i = 0; i < pixel.length; i++) {
+                    Color c = new Color(pixel[i], false);
+                   bw.write(c.toString()+"\n");
+                }
+                bw.close();
+            } catch(IOException e){}
+            finally {
+                bw.close();
+            }
 
 
 

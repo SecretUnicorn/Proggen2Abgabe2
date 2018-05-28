@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
+
 // implements EventHandler<ActionEvent>
 public class Main extends Application  {
 
@@ -24,6 +26,7 @@ public class Main extends Application  {
         Parent root = FXMLLoader.load(getClass().getResource("style.fxml"));
         primaryStage.setTitle("Programmieren 2 Abgabe");
         Scene scene = new Scene(root,921,457);
+        File f = new File("style.css");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
