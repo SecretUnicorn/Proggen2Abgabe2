@@ -24,7 +24,6 @@ public class PixelFilter implements Filter {
 
             int i = 0;
             for(int specPixel: pixel) {
-                System.out.println(i + " specPixel " + specPixel);
                 processedPixel[i] = calculate(specPixel);
                 i++;
             }
