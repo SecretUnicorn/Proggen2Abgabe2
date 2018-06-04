@@ -8,6 +8,7 @@ public class PixelFilter implements Filter {
         int [] processedPixel;
         image1 = (image.length > 0) ? image[0] : null;
         image2 = (image.length > 1) ? image[1] : null;
+        boolean maskIsSet = image2 != null;
 
         if (image1 != null) {
             int width = image1.getWidth();
