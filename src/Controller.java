@@ -24,6 +24,9 @@ public class Controller {
             case "blue":
                 filter = new ColorBandFilter(ColorBand.BLUE);
                 break;
+            case "trash":
+                filter = new ThresholdFilter(128);
+                break;
         }
         try {
             image = ImageIO.read(new File("test_image.bmp"));

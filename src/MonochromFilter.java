@@ -10,7 +10,7 @@ public class MonochromFilter extends PixelFilter {
         return (grey << 16) | (grey << 8) | (grey);
     }
 
-    private int maxValue(int r, int g, int b) {
+    protected int maxValue(int r, int g, int b) {
         if (r > g) {
             return (r > b) ? r : b;
         } else {
@@ -19,7 +19,7 @@ public class MonochromFilter extends PixelFilter {
         }
     }
 
-    private int minValue(int r, int g, int b) {
+    protected int minValue(int r, int g, int b) {
         if (r > g) {
             return (g > b) ? b : g;
         } else {
@@ -28,7 +28,7 @@ public class MonochromFilter extends PixelFilter {
         }
     }
 
-    private int lightness(int max, int min) {
+    protected int lightness(int max, int min) {
         return (max + min) / 2;
     }
 }
