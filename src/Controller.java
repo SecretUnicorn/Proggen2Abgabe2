@@ -25,7 +25,7 @@ public class Controller {
                 filter = new ColorBandFilter(ColorBand.BLUE);
                 break;
             case "trash":
-                filter = new ThresholdFilter(128);
+                filter = new ThresholdFilter(64, 128, 192);
                 break;
         }
         try {

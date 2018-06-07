@@ -8,17 +8,17 @@ public class ThresholdFilter extends PixelFilter {
 
     @Override
     protected int calculate(int colorPixel) {
-        final int white = 0x000000;
-        final int black = 0xFFFFFF;
+        final int white = 0xFFFFFF;
+        final int black = 0x000000;
 
         int r = (colorPixel >> 16) & 0xFF;
         int g = (colorPixel >> 8) & 0xFF;
         int b = (colorPixel) & 0xFF;
 
         int brightness = (int) (0.2126 * r + 0.7152 * g + 0.0722 * b);
-        int processedPixel = black;
+        int processedPixel = white;
         if (brightness < greyValue[0]) {
-            processedPixel = white;
+            processedPixel = black;
         } else {
             for (int i = 0; i < greyValue.length; i++) {
                 if (i < greyValue.length - 1) {
