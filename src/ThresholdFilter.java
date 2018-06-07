@@ -1,27 +1,32 @@
-public class ThresholdFilter extends MonochromFilter{
+public class ThresholdFilter extends PixelFilter {
 
-    private int [] greyValue;
-    public ThresholdFilter(int ... greyValue) {
+    private int[] greyValue;
+
+    public ThresholdFilter(int... greyValue) {
         this.greyValue = greyValue;
     }
+
     @Override
     protected int calculate(int colorPixel) {
         final int white = 0x000000;
         final int black = 0xFFFFFF;
 
-        int r = (colorPixel>>16)&0xFF;
-        int g = (colorPixel>>8)&0xFF;
-        int b = (colorPixel)&0xFF;
+        int r = (colorPixel >> 16) & 0xFF;
+        int g = (colorPixel >> 8) & 0xFF;
+        int b = (colorPixel) & 0xFF;
 
-        int checkGreyValues = greyValue.length;
-
-        int grey = lightness(maxValue(r,g,b),minValue(r,g,b));
+        int brightness = (int) (0.2126 * r + 0.7152 * g + 0.0722 * b);
         int processedPixel = black;
-        System.out.println("grey: " + grey);
-        System.out.println("check grey: " + greyValue[0]);
-        for(int i = 0; i < checkGreyValues; i++) {
-            if(grey < greyValue[i]) {
-                processedPixel = white;
+        if (brightness < greyValue[0]) {
+            processedPixel = white;
+        } else {
+            for (int i = 0; i < greyValue.length; i++) {
+                if (i < greyValue.length - 1) {
+                    if (brightness >= greyValue[i] && brightness < greyValue[i + 1]) {
+                       int value = (int) Math.round((greyValue[i] + greyValue[i + 1]) / 2.0);
+                       processedPixel = value << 16 | value << 8 | value;
+                    }
+                }
             }
         }
 
