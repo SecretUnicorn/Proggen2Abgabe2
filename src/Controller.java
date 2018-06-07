@@ -7,8 +7,9 @@ import java.io.InputStreamReader;
 
 public class Controller {
     public static void main(String[] args) throws IOException {
-        BufferedImage image;
+        BufferedImage image, mask;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Gimme filter");
         String s = br.readLine();
         Filter filter;
         switch (s) {
@@ -30,7 +31,17 @@ public class Controller {
         }
         try {
             image = ImageIO.read(new File("test_image.bmp"));
-            image = filter.process(image);
+            mask = ImageIO.read(new File("mask.bmp"));
+            System.out.println("Mask oder nicht: ");
+            String str = br.readLine();
+            switch (str) {
+                default:
+                    image = filter.process(image);
+                    break;
+                case "mask":
+                    image = filter.process(image, mask);
+                    break;
+            }
             if (image == null) {
                 System.out.println("null");
             }
