@@ -31,18 +31,16 @@ public class PixelFilter implements Filter {
 
             int i = 0;
             for (int specPixel : pixel) {
-                processedPixel[i] = calculate(specPixel);
-                i++;
-            }
-
-            int b = 0;
-            if (maskIsSet) {
-                for (int maskPix : maskPixel) {
-                    if (maskPix == black) {
-                        processedPixel[b] = pixel[b];
+                if(maskIsSet) {
+                    if(maskPixel[i] != black) {
+                        processedPixel[i] = calculate(specPixel);
+                    } else {
+                        processedPixel[i] = specPixel;
                     }
-                    b++;
+                } else {
+                    processedPixel[i] = calculate(specPixel);
                 }
+                i++;
             }
 
             BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
