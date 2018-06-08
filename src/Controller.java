@@ -28,9 +28,15 @@ public class Controller {
             case "trash":
                 filter = new ThresholdFilter(64, 128, 192);
                 break;
+            case "random":
+                filter = new ColorReplacementFilter(0xFFFFFFFF);
+                break;
+            case "spec":
+                filter = new ColorReplacementFilter(0xFFFFFFFF, 0x00000000);
+                break;
         }
         try {
-            image = ImageIO.read(new File("test.bmp"));
+            image = ImageIO.read(new File("mask1.bmp"));
             mask = ImageIO.read(new File("mask1.bmp"));
             System.out.println("Mask oder nicht: ");
             String str = br.readLine();
@@ -45,7 +51,7 @@ public class Controller {
             if (image == null) {
                 System.out.println("null");
             }
-            ImageIO.write(image, "bmp", new File("output_test1.bmp"));
+            ImageIO.write(image, "bmp", new File("output_test.bmp"));
         } catch (IOException e) {
             e.printStackTrace();
         }
