@@ -1,3 +1,5 @@
+package Filter;
+
 public class ThresholdFilter extends PixelFilter {
 
     private int[] greyValue;

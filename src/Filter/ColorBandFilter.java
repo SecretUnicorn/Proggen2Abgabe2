@@ -1,3 +1,5 @@
+package Filter;
+
 public class ColorBandFilter extends PixelFilter {
 
     private ColorBand colorBand;

@@ -1,3 +1,5 @@
+package Filter;
+
 public class MonochromFilter extends PixelFilter {
     @Override
     protected int calculate(int colorPixel) {

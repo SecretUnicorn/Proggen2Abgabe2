@@ -1,3 +1,7 @@
+package Filter;
+
+import java.util.Random;
+
 public class ColorReplacementFilter extends PixelFilter {
     private int toReplace;
     private int replaceWith;
@@ -21,10 +25,10 @@ public class ColorReplacementFilter extends PixelFilter {
     }
 
     private int createRandomFullColor() {
-        return (createRandomSpecColor() << 16) | ((createRandomSpecColor()) << 8) | createRandomSpecColor();
-    }
-
-    private int createRandomSpecColor() {
-        return (int)(Math.random()*256);
+        Random r = new Random();
+        int r1 = r.nextInt(256);
+        int r2 = r.nextInt(256);
+        int r3 = r.nextInt(256);
+        return (r1 << 16) | ((r2) << 8) | r3;
     }
 }

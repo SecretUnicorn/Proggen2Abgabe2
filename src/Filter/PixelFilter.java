@@ -1,3 +1,5 @@
+package Filter;
+
 import java.awt.image.BufferedImage;
 
 public class PixelFilter implements Filter {
