@@ -1,8 +1,10 @@
 package gui;
 
-import javafx.beans.value.ChangeListener;
+//Dustin the gui guy
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -16,7 +18,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,6 +25,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.awt.Color;
 
 public class Controller implements Initializable{
     public ImageView imgMask;
@@ -59,13 +61,33 @@ public class Controller implements Initializable{
         toggleBandBlue.setToggleGroup(COLORBANDGROUP);
         toggleBandGreen.setToggleGroup(COLORBANDGROUP);
         toggleBandRed.setToggleGroup(COLORBANDGROUP);
+        toggleBandBlue.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+        toggleBandRed.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+        toggleBandGreen.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+        colorReplacement1.addEventHandler(ActionEvent.ACTION, new MyButtonHandler());
+        colorReplacement2.addEventHandler(ActionEvent.ACTION, new MyButtonHandler());
+
+
     }
 
-    
+
+    private class MyButtonHandler implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent evt) {
+            if (evt.getSource().equals(colorReplacement1)) {
+                String hex3 = "#" + Integer.toHexString(colorReplacement1.getValue().hashCode()).substring(0, 6).toUpperCase();
+                //System.out.println(colorReplacement1.getValue().hashCode());
+                colorReplacement1.setStyle("-fx-background-color:" + hex3 + "; -fx-text-fill: white;");
+            } else if (evt.getSource().equals(colorReplacement2)) {
+                String hex3 = "#" + Integer.toHexString(colorReplacement2.getValue().hashCode()).substring(0, 6).toUpperCase();
+                colorReplacement2.setStyle("-fx-background-color:" + hex3 + "; -fx-text-fill: white;");
+            }
+        }
+    }
 
 
     public void uploadImage(ActionEvent actionEvent) {
-        Image uploadImage = selectImage();
+        Image uploadImage = selectImage(1);
         if (uploadImage != null){
             btbUploadImage.setVisible(false);
             imgInput.setImage(uploadImage);
@@ -73,14 +95,15 @@ public class Controller implements Initializable{
     }
 
     public void uploadMask(ActionEvent actionEvent) {
-        Image uploadImage = selectImage();
+        Image uploadImage = selectImage(2);
+        ;
         if (uploadImage != null){
             btbUploadMask.setVisible(false);
             imgMask.setImage(uploadImage);
         }
     }
 
-    public Image selectImage(){
+    public Image selectImage(int choose) {
         File file;
         boolean imageFound = false;
         BufferedImage image = null;
@@ -94,7 +117,12 @@ public class Controller implements Initializable{
             try{
                 image = ImageIO.read(new File(file.getAbsolutePath()));
                 ImageIO.write(image,"bmp",new File(file.getAbsolutePath()));
-                textUrlImage.setText(file.getAbsolutePath());
+                if (choose == 1) {
+                    textUrlImage.setText(file.getAbsolutePath());
+                } else {
+                    textUrlMask.setText(file.getAbsolutePath());
+                }
+
                 imageFound = true;
             } catch (IOException e) {
                 Alert.display("File was not found!","File was not found!");
@@ -110,7 +138,6 @@ public class Controller implements Initializable{
     }
 
     public void applyFilters(MouseEvent mouseEvent) throws IOException{
-        // BufferedImage image = SwingFXUtils.fromFXImage(imgInput.getImage(), null);
         BufferedImage image = null;
         try {
             image = ImageIO.read(new File(textUrlImage.getText()));
@@ -118,25 +145,31 @@ public class Controller implements Initializable{
 
         }
 
+
         int width = image.getWidth();
         int height = image.getHeight();
         System.out.println(width+"<- ->"+height);
 
         int [] pixel = new int[width*height];
+        int counter = 0;
 
-        for (int i = 0; i < width; i++) {
+        /*for (int i = 0; i < width; i++) {
            for (int l = 0; l < height; l++){
-                pixel[i+l] = image.getRGB(i,l);
+               counter++;
+                pixel[counter-1] = image.getRGB(i,l);
            }
-        }
+        }*/
 
             BufferedWriter bw = null;
             try{
                 bw = new BufferedWriter(new FileWriter("ausgabe.txt"));
                 System.out.println(pixel.length);
-                for (int i = 0; i < pixel.length; i++) {
-                    Color c = new Color(pixel[i], false);
-                   bw.write(c.toString()+"\n");
+                for (int i = 0; i < width; i++) {
+                    for (int l = 0; l < height; l++) {
+                        counter++;
+                        pixel[counter - 1] = image.getRGB(i, l);
+                        bw.write(pixel[counter - 1] + "\n");
+                    }
                 }
                 bw.close();
             } catch(IOException e){}
@@ -149,4 +182,10 @@ public class Controller implements Initializable{
     }
 
 
+    public void savePicture(ActionEvent actionEvent) {
+    }
+
+    public void changeColor(ActionEvent actionEvent) {
+
+    }
 }
