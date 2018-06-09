@@ -26,7 +26,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.awt.Color;
+
 
 public class Controller implements Initializable{
     public ImageView imgMask;
@@ -62,6 +62,8 @@ public class Controller implements Initializable{
 
     final int black = 0xFF000000;
     final int white = 0xFFFFFFFF;
+
+    public BufferedImage outputSave = null;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -235,7 +237,9 @@ public class Controller implements Initializable{
             } else {
                 output = filter.process(image);
             }
+            outputSave = output;
             Image outputImage = SwingFXUtils.toFXImage(output, null);
+            btnSave.setVisible(true);
             imgOutput.setImage(outputImage);
 
         } catch (NullPointerException e) {
@@ -253,7 +257,18 @@ public class Controller implements Initializable{
 
 
     public void savePicture(ActionEvent actionEvent) {
-    }
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("BMP Image", "*.bmp");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showSaveDialog(stage);
 
+        if (file != null) {
+            try {
+                ImageIO.write(outputSave, "bmp", file);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
 }
