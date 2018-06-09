@@ -1,5 +1,6 @@
 package gui;
 
+import Filter.*;
 //Dustin the gui guy
 
 import javafx.embed.swing.SwingFXUtils;
@@ -54,18 +55,36 @@ public class Controller implements Initializable{
     public final ToggleGroup COLORBANDGROUP = new ToggleGroup();
     public Label textUrlImage;
     public Label textUrlMask;
+    public ImageView imgOutput;
+    public Button btnApplyFilters1;
+    public ProgressBar pbarSave;
+    public Button btnSave;
 
+    final int black = 0xFF000000;
+    final int white = 0xFFFFFFFF;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         toggleBandBlue.setToggleGroup(COLORBANDGROUP);
         toggleBandGreen.setToggleGroup(COLORBANDGROUP);
         toggleBandRed.setToggleGroup(COLORBANDGROUP);
-        toggleBandBlue.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
+
+        toggleBandBlue.setStyle("-fx-background-color: blue; -fx-text-fill: white;" +
+                "");
         toggleBandRed.setStyle("-fx-background-color: red; -fx-text-fill: white;");
         toggleBandGreen.setStyle("-fx-background-color: green; -fx-text-fill: white;");
         colorReplacement1.addEventHandler(ActionEvent.ACTION, new MyButtonHandler());
         colorReplacement2.addEventHandler(ActionEvent.ACTION, new MyButtonHandler());
+        imgInput.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            Image uploadImage = selectImage(1);
+            imgInput.setImage(uploadImage);
+            btbUploadImage.setVisible(false);
+        });
+        imgMask.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            Image uploadMask = selectImage(2);
+            imgMask.setImage(uploadMask);
+            btbUploadMask.setVisible(false);
+        });
 
 
     }
@@ -75,12 +94,27 @@ public class Controller implements Initializable{
         @Override
         public void handle(ActionEvent evt) {
             if (evt.getSource().equals(colorReplacement1)) {
-                String hex3 = "#" + Integer.toHexString(colorReplacement1.getValue().hashCode()).substring(0, 6).toUpperCase();
-                //System.out.println(colorReplacement1.getValue().hashCode());
-                colorReplacement1.setStyle("-fx-background-color:" + hex3 + "; -fx-text-fill: white;");
+                String hex3;
+                if (colorReplacement1.getValue().hashCode() != -1 && colorReplacement1.getValue().hashCode() != 255) {
+                    hex3 = "#" + Integer.toHexString(colorReplacement1.getValue().hashCode()).substring(0, 6).toUpperCase();
+                } else if (colorReplacement1.getValue().hashCode() == -1) {
+                    hex3 = "white";
+                } else {
+                    hex3 = "black";
+                }
+
+
+                colorReplacement1.setStyle("-fx-background-color:" + hex3 + "; -fx-text-fill: black;");
             } else if (evt.getSource().equals(colorReplacement2)) {
-                String hex3 = "#" + Integer.toHexString(colorReplacement2.getValue().hashCode()).substring(0, 6).toUpperCase();
-                colorReplacement2.setStyle("-fx-background-color:" + hex3 + "; -fx-text-fill: white;");
+                String hex3;
+                if (colorReplacement2.getValue().hashCode() != -1 && colorReplacement2.getValue().hashCode() != 255) {
+                    hex3 = "#" + Integer.toHexString(colorReplacement2.getValue().hashCode()).substring(0, 6).toUpperCase();
+                } else if (colorReplacement2.getValue().hashCode() == -1) {
+                    hex3 = "white";
+                } else {
+                    hex3 = "black";
+                }
+                colorReplacement2.setStyle("-fx-background-color:" + hex3 + "; -fx-text-fill: black;");
             }
         }
     }
@@ -138,44 +172,80 @@ public class Controller implements Initializable{
     }
 
     public void applyFilters(MouseEvent mouseEvent) throws IOException{
+        boolean maskToggled = toggleMask.isSelected();
         BufferedImage image = null;
+        BufferedImage mask = null;
         try {
             image = ImageIO.read(new File(textUrlImage.getText()));
+            if (maskToggled) {
+                mask = ImageIO.read(new File(textUrlMask.getText()));
+            }
         } catch (IOException e){
+            Alert.display("FEHLER", "Es wurde vergessen ein Bild zu setzten!");
+        }
 
+        Filter filter = null;
+        if (toggleBlur.isSelected()) {
+
+        } else if (toggleMonochrom.isSelected()) {
+            filter = new MonochromFilter();
+        } else if (toggleBlur.isSelected()) {
+            //filter = Blurfilter();
+        } else if (toggleColorband.isSelected()) {
+            if (toggleBandRed.isSelected()) {
+                filter = new ColorBandFilter(ColorBand.RED);
+            } else if (toggleBandBlue.isSelected()) {
+                filter = new ColorBandFilter(ColorBand.BLUE);
+            } else if (toggleBandGreen.isSelected()) {
+                filter = new ColorBandFilter(ColorBand.GREEN);
+            }
+        } else if (toggleReplacement.isSelected()) {
+            int replace, replaceWith;
+
+            if (colorReplacement2.getValue().hashCode() != -1 && colorReplacement2.getValue().hashCode() != 255) {
+                replaceWith = (int) (colorReplacement2.getValue().getRed() * 255) << 16 | (int) (colorReplacement2.getValue().getGreen() * 255) << 8 | (int) (colorReplacement2.getValue().getBlue() * 255);
+            } else if (colorReplacement2.getValue().hashCode() == -1) {
+                replaceWith = white;
+            } else {
+                replaceWith = black;
+            }
+
+            if (colorReplacement1.getValue().hashCode() != -1 && colorReplacement1.getValue().hashCode() != 255) {
+                replace = (int) (colorReplacement1.getValue().getRed() * 255) << 16 | (int) (colorReplacement1.getValue().getGreen() * 255) << 8 | (int) (colorReplacement1.getValue().getBlue() * 255);
+            } else if (colorReplacement1.getValue().hashCode() == -1) {
+                replace = white;
+            } else {
+                replace = black;
+            }
+
+            filter = new ColorReplacementFilter(replace, replaceWith);
+        } else if (toggleThreshhold.isSelected()) {
+            String thresholdValues[] = textThreshold.getText().split(",");
+            int tValues[] = new int[thresholdValues.length];
+            for (int i = 0; i < tValues.length; i++) {
+                tValues[i] = Integer.parseInt(thresholdValues[i]);
+            }
+            filter = new ThresholdFilter(tValues);
+        }
+
+        BufferedImage output = null;
+        try {
+            if (maskToggled) {
+                output = filter.process(image, mask);
+            } else {
+                output = filter.process(image);
+            }
+            Image outputImage = SwingFXUtils.toFXImage(output, null);
+            imgOutput.setImage(outputImage);
+
+        } catch (NullPointerException e) {
+            Alert.display("Kein Filter gewählt", "Bitte wählen Sie mindestens ein Filter aus");
         }
 
 
-        int width = image.getWidth();
-        int height = image.getHeight();
-        System.out.println(width+"<- ->"+height);
 
-        int [] pixel = new int[width*height];
-        int counter = 0;
 
-        /*for (int i = 0; i < width; i++) {
-           for (int l = 0; l < height; l++){
-               counter++;
-                pixel[counter-1] = image.getRGB(i,l);
-           }
-        }*/
 
-            BufferedWriter bw = null;
-            try{
-                bw = new BufferedWriter(new FileWriter("ausgabe.txt"));
-                System.out.println(pixel.length);
-                for (int i = 0; i < width; i++) {
-                    for (int l = 0; l < height; l++) {
-                        counter++;
-                        pixel[counter - 1] = image.getRGB(i, l);
-                        bw.write(pixel[counter - 1] + "\n");
-                    }
-                }
-                bw.close();
-            } catch(IOException e){}
-            finally {
-                bw.close();
-            }
 
 
 
@@ -185,7 +255,5 @@ public class Controller implements Initializable{
     public void savePicture(ActionEvent actionEvent) {
     }
 
-    public void changeColor(ActionEvent actionEvent) {
 
-    }
 }

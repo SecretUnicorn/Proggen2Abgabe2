@@ -25,7 +25,7 @@ public class Main extends Application  {
         setPrimaryStage(primaryStage);
         Parent root = FXMLLoader.load(getClass().getResource("style.fxml"));
         primaryStage.setTitle("Programmieren 2 Abgabe");
-        Scene scene = new Scene(root, 921, 526);
+        Scene scene = new Scene(root, 1229, 526);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
