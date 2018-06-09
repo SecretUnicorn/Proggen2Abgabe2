@@ -29,4 +29,10 @@ public class ColorBandFilter extends PixelFilter {
         }
         return (r << 16) | (g << 8) | (b << 0);
     }
+
+    @Override
+    public String getName() {
+        return "ColorBand";
+    }
+
 }

@@ -2,10 +2,10 @@ package Filter;
 
 import java.awt.image.BufferedImage;
 
-public class AreaFilter implements Filter{
+public class AreaFilter implements Filter {
 
     @Override
-    public BufferedImage process(BufferedImage... image){
+    public BufferedImage process(BufferedImage... image) {
         BufferedImage image1, image2;
         int[] pixel;
         int[] maskPixel;
@@ -41,7 +41,11 @@ public class AreaFilter implements Filter{
         return null;
     }
 
-    protected int calculate(int [] pixel, int [] maskPixel, int index, int width, int height) {
+    protected int calculate(int[] pixel, int[] maskPixel, int index, int width, int height) {
         return pixel[index];
+    }
+
+    public String getName() {
+        return "";
     }
 }

@@ -3,6 +3,8 @@ package gui;
 import Filter.*;
 //Dustin the gui guy
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,6 +27,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 
@@ -63,20 +67,35 @@ public class Controller implements Initializable{
     final int black = 0xFF000000;
     final int white = 0xFFFFFFFF;
 
+    public ArrayList<Filter> chainfilter = new ArrayList<Filter>();
+
     public BufferedImage outputSave = null;
+    public Button addBlur;
+    public Button addPixel;
+    public Button addThresh;
+    public Button addReplace;
+    public Button addBand;
+    public Button addMono;
+    public Label lblFilterAnwenden;
+    public Button btnChain;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //Groups
         toggleBandBlue.setToggleGroup(COLORBANDGROUP);
         toggleBandGreen.setToggleGroup(COLORBANDGROUP);
         toggleBandRed.setToggleGroup(COLORBANDGROUP);
 
-        toggleBandBlue.setStyle("-fx-background-color: blue; -fx-text-fill: white;" +
-                "");
-        toggleBandRed.setStyle("-fx-background-color: red; -fx-text-fill: white;");
-        toggleBandGreen.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+        //EventHandler
         colorReplacement1.addEventHandler(ActionEvent.ACTION, new MyButtonHandler());
         colorReplacement2.addEventHandler(ActionEvent.ACTION, new MyButtonHandler());
+        addBand.addEventHandler(ActionEvent.ACTION, new AddHandler());
+        addBlur.addEventHandler(ActionEvent.ACTION, new AddHandler());
+        addPixel.addEventHandler(ActionEvent.ACTION, new AddHandler());
+        addThresh.addEventHandler(ActionEvent.ACTION, new AddHandler());
+        addReplace.addEventHandler(ActionEvent.ACTION, new AddHandler());
+        addMono.addEventHandler(ActionEvent.ACTION, new AddHandler());
+
         imgInput.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Image uploadImage = selectImage(1);
             imgInput.setImage(uploadImage);
@@ -88,7 +107,58 @@ public class Controller implements Initializable{
             btbUploadMask.setVisible(false);
         });
 
+        //Styles
+        toggleBandBlue.setStyle("-fx-background-color: blue; -fx-text-fill: white;" +
+                "");
+        toggleBandRed.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+        toggleBandGreen.setStyle("-fx-background-color: green; -fx-text-fill: white;");
+        addBand.getStyleClass().add("add");
+        addMono.getStyleClass().add("add");
+        addReplace.getStyleClass().add("add");
+        addThresh.getStyleClass().add("add");
+        addPixel.getStyleClass().add("add");
+        addBlur.getStyleClass().add("add");
+    }
 
+    public void applyChainFilter(MouseEvent mouseEvent) {
+        boolean maskToggled = toggleMask.isSelected();
+        BufferedImage image = null;
+        BufferedImage mask = null;
+        try {
+            image = ImageIO.read(new File(textUrlImage.getText()));
+            if (maskToggled) {
+                mask = ImageIO.read(new File(textUrlMask.getText()));
+            }
+        } catch (IOException e) {
+            Alert.display("FEHLER", "Es wurde vergessen ein Bild zu setzten!");
+            return;
+        }
+        pbarSave.setVisible(true);
+        BufferedImage output = image;
+        try {
+            if (maskToggled) {
+                for (int i = 0; i < chainfilter.size(); i++) {
+                    output = chainfilter.get(i).process(output, mask);
+                }
+
+            } else {
+                for (int i = 0; i < chainfilter.size(); i++) {
+                    output = chainfilter.get(i).process(output);
+                }
+            }
+            outputSave = output;
+            Image outputImage = SwingFXUtils.toFXImage(output, null);
+            btnSave.setVisible(true);
+            imgOutput.setImage(outputImage);
+
+        } catch (NullPointerException e) {
+            Alert.display("Kein Filter gewählt", "Bitte wählen Sie mindestens ein Filter aus");
+        }
+    }
+
+    public void reset(MouseEvent mouseEvent) {
+        chainfilter.clear();
+        lblFilterAnwenden.setText("");
     }
 
 
@@ -121,6 +191,83 @@ public class Controller implements Initializable{
         }
     }
 
+    private class AddHandler implements EventHandler<ActionEvent> {
+        @Override
+        public void handle(ActionEvent e) {
+            boolean added = false;
+            String additional = "";
+            if (e.getSource().equals(addBand)) {
+                if (toggleBandRed.isSelected()) {
+                    chainfilter.add(new ColorBandFilter(ColorBand.RED));
+                    added = true;
+                    additional = ColorBand.RED.toString();
+                } else if (toggleBandBlue.isSelected()) {
+                    chainfilter.add(new ColorBandFilter(ColorBand.BLUE));
+                    added = true;
+                    additional = ColorBand.BLUE.toString();
+                } else if (toggleBandGreen.isSelected()) {
+                    chainfilter.add(new ColorBandFilter(ColorBand.GREEN));
+                    added = true;
+                    additional = ColorBand.GREEN.toString();
+                } else {
+                    Alert.display("FEHLER!", "Bitte wählen Sie RED,GREEN oder BLUE beim Colorpassfilter aus!");
+                }
+            } else if (e.getSource().equals(addBlur)) {
+                int blurRadius = (int) sliderBlur.getValue();
+                chainfilter.add(new BlurFilter(blurRadius));
+                additional += blurRadius;
+                added = true;
+            } else if (e.getSource().equals(addReplace)) {
+                int replace, replaceWith;
+
+                if (colorReplacement2.getValue().hashCode() != -1 && colorReplacement2.getValue().hashCode() != 255) {
+                    replaceWith = (int) (colorReplacement2.getValue().getRed() * 255) << 16 | (int) (colorReplacement2.getValue().getGreen() * 255) << 8 | (int) (colorReplacement2.getValue().getBlue() * 255);
+                } else if (colorReplacement2.getValue().hashCode() == -1) {
+                    replaceWith = white;
+                } else {
+                    replaceWith = black;
+                }
+
+                if (colorReplacement1.getValue().hashCode() != -1 && colorReplacement1.getValue().hashCode() != 255) {
+                    replace = (int) (colorReplacement1.getValue().getRed() * 255) << 16 | (int) (colorReplacement1.getValue().getGreen() * 255) << 8 | (int) (colorReplacement1.getValue().getBlue() * 255);
+                } else if (colorReplacement1.getValue().hashCode() == -1) {
+                    replace = white;
+                } else {
+                    replace = black;
+                }
+                chainfilter.add(new ColorReplacementFilter(replace, replaceWith));
+                additional = "#" + replace + "-" + "#" + replaceWith;
+                added = true;
+            } else if (e.getSource().equals(addPixel)) {
+                int pixelRadius = (int) sliderPixel.getValue();
+                //chainfilter.add(new Pixel(pixelRadius));
+                additional += pixelRadius;
+                added = false;
+            } else if (e.getSource().equals(addThresh)) {
+                String thresholdValues[] = textThreshold.getText().split(",");
+                int tValues[] = new int[thresholdValues.length];
+                for (int i = 0; i < tValues.length; i++) {
+                    tValues[i] = Integer.parseInt(thresholdValues[i]);
+                }
+                chainfilter.add(new ThresholdFilter(tValues));
+                additional = textThreshold.getText();
+                added = true;
+            } else if (e.getSource().equals(addMono)) {
+                chainfilter.add(new MonochromFilter());
+                added = true;
+            }
+            if (added) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(lblFilterAnwenden.getText());
+                if (chainfilter.size() != 1) {
+                    sb.append(" -> ");
+                }
+                sb.append(chainfilter.get(chainfilter.size() - 1).getName());
+                sb.append("(").append(additional).append(")");
+                lblFilterAnwenden.setText(sb.toString());
+            }
+        }
+    }
 
     public void uploadImage(ActionEvent actionEvent) {
         Image uploadImage = selectImage(1);
@@ -168,90 +315,7 @@ public class Controller implements Initializable{
         if(imageFound){
             uploadImage = SwingFXUtils.toFXImage(image, null);
         }
-
         return uploadImage;
-
-    }
-
-    public void applyFilters(MouseEvent mouseEvent) throws IOException{
-        boolean maskToggled = toggleMask.isSelected();
-        BufferedImage image = null;
-        BufferedImage mask = null;
-        try {
-            image = ImageIO.read(new File(textUrlImage.getText()));
-            if (maskToggled) {
-                mask = ImageIO.read(new File(textUrlMask.getText()));
-            }
-        } catch (IOException e){
-            Alert.display("FEHLER", "Es wurde vergessen ein Bild zu setzten!");
-        }
-
-        Filter filter = null;
-        if (toggleBlur.isSelected()) {
-
-        } else if (toggleMonochrom.isSelected()) {
-            filter = new MonochromFilter();
-        } else if (toggleBlur.isSelected()) {
-            //filter = Blurfilter();
-        } else if (toggleColorband.isSelected()) {
-            if (toggleBandRed.isSelected()) {
-                filter = new ColorBandFilter(ColorBand.RED);
-            } else if (toggleBandBlue.isSelected()) {
-                filter = new ColorBandFilter(ColorBand.BLUE);
-            } else if (toggleBandGreen.isSelected()) {
-                filter = new ColorBandFilter(ColorBand.GREEN);
-            }
-        } else if (toggleReplacement.isSelected()) {
-            int replace, replaceWith;
-
-            if (colorReplacement2.getValue().hashCode() != -1 && colorReplacement2.getValue().hashCode() != 255) {
-                replaceWith = (int) (colorReplacement2.getValue().getRed() * 255) << 16 | (int) (colorReplacement2.getValue().getGreen() * 255) << 8 | (int) (colorReplacement2.getValue().getBlue() * 255);
-            } else if (colorReplacement2.getValue().hashCode() == -1) {
-                replaceWith = white;
-            } else {
-                replaceWith = black;
-            }
-
-            if (colorReplacement1.getValue().hashCode() != -1 && colorReplacement1.getValue().hashCode() != 255) {
-                replace = (int) (colorReplacement1.getValue().getRed() * 255) << 16 | (int) (colorReplacement1.getValue().getGreen() * 255) << 8 | (int) (colorReplacement1.getValue().getBlue() * 255);
-            } else if (colorReplacement1.getValue().hashCode() == -1) {
-                replace = white;
-            } else {
-                replace = black;
-            }
-
-            filter = new ColorReplacementFilter(replace, replaceWith);
-        } else if (toggleThreshhold.isSelected()) {
-            String thresholdValues[] = textThreshold.getText().split(",");
-            int tValues[] = new int[thresholdValues.length];
-            for (int i = 0; i < tValues.length; i++) {
-                tValues[i] = Integer.parseInt(thresholdValues[i]);
-            }
-            filter = new ThresholdFilter(tValues);
-        }
-
-        BufferedImage output = null;
-        try {
-            if (maskToggled) {
-                output = filter.process(image, mask);
-            } else {
-                output = filter.process(image);
-            }
-            outputSave = output;
-            Image outputImage = SwingFXUtils.toFXImage(output, null);
-            btnSave.setVisible(true);
-            imgOutput.setImage(outputImage);
-
-        } catch (NullPointerException e) {
-            Alert.display("Kein Filter gewählt", "Bitte wählen Sie mindestens ein Filter aus");
-        }
-
-
-
-
-
-
-
 
     }
 

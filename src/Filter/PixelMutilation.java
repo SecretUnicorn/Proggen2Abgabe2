@@ -13,4 +13,9 @@ public class PixelMutilation extends AreaFilter {
         int nextColor = pixel[index + radius < pixel.length ? index + radius : index - 1];
         return (int) (Math.round((colorPixel + nextColor) / 2.0));
     }
+
+    @Override
+    public String getName() {
+        return "Mutilation";
+    }
 }

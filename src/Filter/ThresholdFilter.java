@@ -34,4 +34,9 @@ public class ThresholdFilter extends PixelFilter {
 
         return processedPixel;
     }
+
+    @Override
+    public String getName() {
+        return "Threshold";
+    }
 }

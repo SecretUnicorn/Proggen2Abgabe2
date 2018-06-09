@@ -31,3 +31,11 @@
     -fx-font-weight: bold;
 
 }
+
+.add {
+    -fx-font-size: 10px;
+    -fx-border-color: white;
+    -fx-padding: 3 3 3 3;
+    -fx-background-radius: 50%;
+    -fx-background-insets: 0;
+}

@@ -31,4 +31,9 @@ public class ColorReplacementFilter extends PixelFilter {
         int r3 = r.nextInt(256);
         return (r1 << 16) | ((r2) << 8) | r3;
     }
+
+    @Override
+    public String getName() {
+        return "ColorReplacement";
+    }
 }

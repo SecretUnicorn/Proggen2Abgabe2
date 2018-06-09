@@ -6,6 +6,7 @@ public class BlurFilter extends AreaFilter {
 
     private int radius;
 
+
     public BlurFilter(int radius) {
         this.radius = radius;
     }
@@ -34,5 +35,10 @@ public class BlurFilter extends AreaFilter {
         valueGreen = Math.round(valueGreen / (float)neededForProcess.size());
         valueBlue = Math.round(valueBlue / (float)neededForProcess.size());
         return maskPixel[index] != black ? (valueRed << 16) | (valueGreen << 8) | (valueBlue) : pixel[index];
+    }
+
+    @Override
+    public String getName() {
+        return "Blur";
     }
 }

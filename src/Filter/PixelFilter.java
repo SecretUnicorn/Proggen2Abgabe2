@@ -51,4 +51,8 @@ public class PixelFilter implements Filter {
     protected int calculate(int colorPixel) {
         return colorPixel;
     }
+
+    public String getName() {
+        return "";
+    }
 }

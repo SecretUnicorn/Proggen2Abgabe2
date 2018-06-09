@@ -15,4 +15,9 @@ public class MonochromFilter extends PixelFilter {
     private int luminosity(int r, int g, int b) {
         return (int) Math.round(0.21*r + 0.72*g + 0.07*b);
     }
+
+    @Override
+    public String getName() {
+        return "Monochrome";
+    }
 }
