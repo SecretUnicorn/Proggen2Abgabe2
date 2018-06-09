@@ -21,14 +21,7 @@ public class PixelFilter implements Filter {
             processedPixel = new int[pixel.length];
             maskPixel = new int[pixel.length];
 
-            for (int i = 0; i < height; i++) {
-                for (int j = 0; j < width; j++) {
-                    pixel[i * width + j] = image1.getRGB(j, i);
-                    if (maskIsSet) {
-                        maskPixel[i * width + j] = image2.getRGB(j, i);
-                    }
-                }
-            }
+            ImageHelper.getRGBValues(pixel,maskPixel,maskIsSet,image1,image2);
 
             int i = 0;
             for (int specPixel : pixel) {
