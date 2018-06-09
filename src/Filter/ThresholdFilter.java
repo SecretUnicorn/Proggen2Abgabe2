@@ -4,7 +4,7 @@ public class ThresholdFilter extends PixelFilter {
 
     private int[] greyValue;
 
-    public ThresholdFilter(int... greyValue) {
+    public ThresholdFilter(int ... greyValue) {
         this.greyValue = greyValue;
     }
 

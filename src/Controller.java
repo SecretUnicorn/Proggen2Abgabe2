@@ -36,6 +36,9 @@ public class Controller {
             case "spec":
                 filter = new ColorReplacementFilter(0xFFFFFFFF, 0x00000000);
                 break;
+            case "blur":
+                filter = new AreaFilter();
+                break;
         }
         try {
             image = ImageIO.read(new File("mask1.bmp"));

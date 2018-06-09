@@ -22,11 +22,11 @@ public class PixelFilter implements Filter {
             processedPixel = new int[pixel.length];
             maskPixel = new int[pixel.length];
 
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    pixel[i * height + j] = image1.getRGB(i, j);
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    pixel[i * width + j] = image1.getRGB(j, i);
                     if (maskIsSet) {
-                        maskPixel[i * height + j] = image2.getRGB(i, j);
+                        maskPixel[i * width + j] = image2.getRGB(j, i);
                     }
                 }
             }
@@ -46,9 +46,9 @@ public class PixelFilter implements Filter {
             }
 
             BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            for (int a = 0; a < width; a++) {
-                for (int j = 0; j < height; j++) {
-                    result.setRGB(a, j, processedPixel[a * height + j]);
+            for (int a = 0; a < height; a++) {
+                for (int j = 0; j < width; j++) {
+                    result.setRGB(j, a, processedPixel[a * width + j]);
                 }
             }
             return result;
