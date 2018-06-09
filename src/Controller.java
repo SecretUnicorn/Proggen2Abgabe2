@@ -36,10 +36,13 @@ public class Controller {
             case "spec":
                 filter = new ColorReplacementFilter(0xFFFFFFFF, 0x00000000);
                 break;
+            case "blur":
+                filter = new BlurFilter(7);
+                break;
         }
         try {
-            image = ImageIO.read(new File("mask1.bmp"));
-            mask = ImageIO.read(new File("mask1.bmp"));
+            image = ImageIO.read(new File("test_image.bmp"));
+            mask = ImageIO.read(new File("inverse_mask.bmp"));
             System.out.println("Mask oder nicht: ");
             String str = br.readLine();
             switch (str) {
