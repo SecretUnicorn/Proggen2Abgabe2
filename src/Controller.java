@@ -41,8 +41,8 @@ public class Controller {
                 break;
         }
         try {
-            image = ImageIO.read(new File("test_image.bmp"));
-            mask = ImageIO.read(new File("inverse_mask.bmp"));
+            image = ImageIO.read(new File("test.bmp"));
+            mask = ImageIO.read(new File("mask1.bmp"));
             System.out.println("Mask oder nicht: ");
             String str = br.readLine();
             switch (str) {

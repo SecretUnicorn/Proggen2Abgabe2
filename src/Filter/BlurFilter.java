@@ -33,6 +33,6 @@ public class BlurFilter extends AreaFilter {
         valueRed = Math.round(valueRed / (float)neededForProcess.size());
         valueGreen = Math.round(valueGreen / (float)neededForProcess.size());
         valueBlue = Math.round(valueBlue / (float)neededForProcess.size());
-        return (valueRed << 16) | (valueGreen << 8) | (valueBlue);
+        return maskPixel[index] != black ? (valueRed << 16) | (valueGreen << 8) | (valueBlue) : pixel[index];
     }
 }

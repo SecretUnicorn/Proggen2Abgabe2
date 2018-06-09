@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 public class PixelFilter implements Filter {
     @Override
     public BufferedImage process(BufferedImage... image){
-        final int black = 0xFF000000;
         BufferedImage image1, image2;
         int[] pixel;
         int[] maskPixel;
