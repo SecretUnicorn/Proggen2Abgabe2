@@ -25,7 +25,7 @@ public class ThresholdFilter extends PixelFilter {
             for (int i = 0; i < greyValue.length; i++) {
                 if (i < greyValue.length - 1) {
                     if (brightness >= greyValue[i] && brightness < greyValue[i + 1]) {
-                       int value = (int) Math.round((greyValue[i] + greyValue[i + 1]) / 2.0);
+                       int value = greyValue[i] + (greyValue[i+1] - greyValue[i])/2;
                        processedPixel = value << 16 | value << 8 | value;
                     }
                 }

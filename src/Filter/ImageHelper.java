@@ -15,4 +15,8 @@ public class ImageHelper {
             }
         }
     }
+
+    public static int setGreyPixel(int greyScaleValue) {
+        return greyScaleValue << 16 | greyScaleValue << 8 | greyScaleValue;
+    }
 }
