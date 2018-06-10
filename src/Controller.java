@@ -44,10 +44,12 @@ public class Controller {
                 ((ChainFilter) filter).addFilter(new BlurFilter(3));
                 ((ChainFilter) filter).addFilter(new ThresholdFilter(128));
                 break;
+            case "block":
+                filter = new PixelGraphicFilter(20);
         }
         try {
-            image = ImageIO.read(new File("test_image.bmp"));
-            mask = ImageIO.read(new File("mask.bmp"));
+            image = ImageIO.read(new File("test.bmp"));
+            mask = ImageIO.read(new File("invmask.bmp"));
             System.out.println("Mask oder nicht: ");
             String str = br.readLine();
             switch (str) {
