@@ -39,17 +39,27 @@ public class Controller {
             case "blur":
                 filter = new BlurFilter(7);
                 break;
-            case "chain":
+            case "chain1":
                 filter = new ChainFilter();
+                ((ChainFilter) filter).addFilter(new ThresholdFilter(64, 128, 192));
                 ((ChainFilter) filter).addFilter(new BlurFilter(3));
-                ((ChainFilter) filter).addFilter(new ThresholdFilter(128));
+                break;
+            case "chain2":
+                filter = new ChainFilter();
+                ((ChainFilter) filter).addFilter(new ThresholdFilter(64, 128, 192));
+                ((ChainFilter) filter).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(96)));
+                ((ChainFilter) filter).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(160)));
                 break;
             case "block":
                 filter = new PixelGraphicFilter(20);
+                break;
+            case "tester":
+                filter = new ColorReplacementFilter(0);
+                break;
         }
         try {
-            image = ImageIO.read(new File("test_image.bmp"));
-            mask = ImageIO.read(new File("mask.bmp"));
+            image = ImageIO.read(new File("test.bmp"));
+            mask = ImageIO.read(new File("mask1.bmp"));
             System.out.println("Mask oder nicht: ");
             String str = br.readLine();
             switch (str) {

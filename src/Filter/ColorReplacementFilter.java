@@ -18,7 +18,11 @@ public class ColorReplacementFilter extends PixelFilter {
 
     @Override
     protected int calculate(int colorPixel) {
-        if (colorPixel == toReplace) {
+        int r = (colorPixel >> 16) & 0xFF;
+        int g = (colorPixel >> 8) & 0xFF;
+        int b = (colorPixel) & 0xFF;
+        int newColorPixel = r << 16 | g << 8 | b;
+        if (newColorPixel == toReplace) {
             return replaceWith;
         }
         return colorPixel;
