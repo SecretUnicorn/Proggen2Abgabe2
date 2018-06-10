@@ -3,6 +3,8 @@ package gui;
 import Filter.*;
 //Dustin the gui guy
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -47,11 +49,13 @@ public class Controller implements Initializable {
     public ToggleButton toggleBandRed;
     public ToggleButton toggleBandBlue;
     public ToggleButton toggleBandGreen;
-    public ToggleButton toggleMask;
+    public ToggleSwitch toggleMask;
 
     public Label textUrlImage;
     public Label textUrlMask;
     public Label lblFilterAnwenden;
+    public Label lblBlur;
+    public Label lblPixel;
 
     public Slider sliderBlur;
     public Slider sliderPixel;
@@ -71,6 +75,7 @@ public class Controller implements Initializable {
 
     public ArrayList<Filter> chainfilter = new ArrayList<Filter>();
     public BufferedImage outputSave = null;
+
 
 
     @Override
@@ -99,6 +104,25 @@ public class Controller implements Initializable {
             imgMask.setImage(uploadMask);
             btbUploadMask.setVisible(false);
         });
+        sliderBlur.valueProperty().addListener(new ChangeListener() {
+
+            @Override
+            public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+                lblBlur.textProperty().setValue(
+                        String.valueOf((int) sliderBlur.getValue()) + "px");
+
+            }
+        });
+        sliderPixel.valueProperty().addListener(new ChangeListener() {
+
+            @Override
+            public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+                lblPixel.textProperty().setValue(
+                        String.valueOf((int) sliderPixel.getValue()) + "px");
+
+            }
+        });
+
 
         //Styles
         toggleBandBlue.setStyle("-fx-background-color: blue; -fx-text-fill: white;" +
@@ -114,7 +138,7 @@ public class Controller implements Initializable {
     }
 
     public void applyChainFilter(MouseEvent mouseEvent) {
-        boolean maskToggled = toggleMask.isSelected();
+        boolean maskToggled = toggleMask.switchOnProperty();
         BufferedImage image;
         BufferedImage mask = null;
         try {
@@ -162,30 +186,23 @@ public class Controller implements Initializable {
         @Override
         public void handle(ActionEvent evt) {
             if (evt.getSource().equals(colorReplacement1)) {
-                String hex3;
-                if (colorReplacement1.getValue().hashCode() != -1 && colorReplacement1.getValue().hashCode() != 255) {
-                    hex3 = "#" + Integer.toHexString(colorReplacement1.getValue().hashCode()).substring(0, 6).toUpperCase();
-                } else if (colorReplacement1.getValue().hashCode() == -1) {
-                    hex3 = "white";
-                } else {
-                    hex3 = "black";
-                }
-
-
-                colorReplacement1.setStyle("-fx-background-color:" + hex3 + "; -fx-text-fill: black;");
+                colorReplacement1.setStyle("-fx-background-color:" + getHex(colorReplacement1) + ";");
             } else if (evt.getSource().equals(colorReplacement2)) {
-                String hex3;
-                if (colorReplacement2.getValue().hashCode() != -1 && colorReplacement2.getValue().hashCode() != 255) {
-                    hex3 = "#" + Integer.toHexString(colorReplacement2.getValue().hashCode()).substring(0, 6).toUpperCase();
-                } else if (colorReplacement2.getValue().hashCode() == -1) {
-                    hex3 = "white";
-                } else {
-                    hex3 = "black";
-                }
-                colorReplacement2.setStyle("-fx-background-color:" + hex3 + "; -fx-text-fill: black;");
+                colorReplacement2.setStyle("-fx-background-color:" + getHex(colorReplacement2) + ";");
+            }
+        }
+
+        private String getHex(ColorPicker c) {
+            if (c.getValue().hashCode() != -1 && c.getValue().hashCode() != 255) {
+                return "#" + Integer.toHexString(c.getValue().hashCode()).substring(0, 6).toUpperCase();
+            } else if (c.getValue().hashCode() == -1) {
+                return "white";
+            } else {
+                return "black";
             }
         }
     }
+
 
     private class AddHandler implements EventHandler<ActionEvent> {
         @Override
@@ -232,7 +249,15 @@ public class Controller implements Initializable {
                     replace = black;
                 }
                 chainfilter.add(new ColorReplacementFilter(replace, replaceWith));
-                additional = replace + " & " + replaceWith;
+                int r1, g1, b1, r2, g2, b2;
+                r1 = (replace >> 16) & 0xFF;
+                g1 = (replace >> 8) & 0xFF;
+                b1 = (replace) & 0xFF;
+                r2 = (replaceWith >> 16) & 0xFF;
+                g2 = (replaceWith >> 8) & 0xFF;
+                b2 = (replaceWith) & 0xFF;
+
+                additional = r1 + "," + g1 + "," + b1 + " ~> " + r2 + "," + g2 + "," + b2;
                 added = true;
             } else if (e.getSource().equals(addPixel)) {
                 int pixelRadius = (int) sliderPixel.getValue();

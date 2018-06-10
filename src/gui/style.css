@@ -1,5 +1,13 @@
 .root {
-    -fx-background-image: url("../../../../background.jpg");
+    -fx-background-image: url("../../../../background2.jpg");
+}
+
+.label {
+    -fx-text-fill: white;
+}
+
+.slider .axis {
+    -fx-tick-label-fill: white;
 }
 
 .toggle-button:selected:focused {
@@ -21,21 +29,26 @@
     -fx-background-insets: 0, 1, 2, 0;
     -fx-text-fill: white;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 5, 0.0, 0, 1);
-    -fx-font-family: "Arial";
+    -fx-font-family: "Avenir Next";
     -fx-text-fill: linear-gradient(white, #d0d0d0);
-    -fx-font-size: 12px;
+    -fx-font-size: 10px;
     -fx-padding: 10 20 10 20;
 }
 
 #toggleBlur {
     -fx-font-weight: bold;
-
 }
 
 .add {
     -fx-font-size: 10px;
-    -fx-border-color: white;
-    -fx-padding: 3 7 3 7;
-    -fx-background-radius: 50%;
+    -fx-border-color: none;
+    -fx-padding: 4 8 4 8;
+    -fx-background-radius: 15 15 15 15;
     -fx-background-insets: 0;
+}
+
+.mask {
+    -fx-border-insets: 0;
+    -fx-padding: 3;
+    -fx-border-radius: 0;
 }

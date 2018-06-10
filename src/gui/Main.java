@@ -23,6 +23,7 @@ public class Main extends Application  {
         primaryStage.setTitle("Programmieren 2 Abgabe (Ahlers & Folwarzny)");
         Scene scene = new Scene(root, 1229, 526);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
