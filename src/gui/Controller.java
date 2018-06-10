@@ -232,7 +232,7 @@ public class Controller implements Initializable {
                     replace = black;
                 }
                 chainfilter.add(new ColorReplacementFilter(replace, replaceWith));
-                additional = "#" + replace + "-" + "#" + replaceWith;
+                additional = replace + " & " + replaceWith;
                 added = true;
             } else if (e.getSource().equals(addPixel)) {
                 int pixelRadius = (int) sliderPixel.getValue();
@@ -316,18 +316,16 @@ public class Controller implements Initializable {
     }
 
 
-    public void savePicture(ActionEvent actionEvent) {
+    public void savePicture(ActionEvent actionEvent) throws IOException {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("BMP Image", "*.bmp");
         fileChooser.getExtensionFilters().add(extFilter);
         File file = fileChooser.showSaveDialog(stage);
 
         if (file != null) {
-            try {
                 ImageIO.write(outputSave, "bmp", file);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        } else {
+            Alert.display("Fehler beim Speichern!", "Es wurde keine Datei gespeichert, da kein korrekter Pfad angegeben wurde");
         }
     }
 
