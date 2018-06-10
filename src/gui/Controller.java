@@ -15,8 +15,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -26,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 
@@ -179,6 +183,20 @@ public class Controller implements Initializable {
 
     public void warhowl(MouseEvent mouseEvent) {
         //TODO: Implement this
+    }
+
+    public void sound(MouseEvent dragEvent) {
+        Random random = new Random();
+        String musicFile;
+        if (random.nextBoolean()) {
+            musicFile = "airhorn.mp3";
+        } else {
+            musicFile = "boing.mp3";
+        }
+
+        Media sound = new Media(new File(musicFile).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer.play();
     }
 
 
