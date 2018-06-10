@@ -3,8 +3,6 @@ package gui;
 import Filter.*;
 //Dustin the gui guy
 
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,62 +20,58 @@ import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 
-public class Controller implements Initializable{
+public class Controller implements Initializable {
     public ImageView imgMask;
     public ImageView imgInput;
-    public Button btbUploadMask;
-    public Button btnApplyFilters;
-    public Slider sliderBlur;
-    public Slider sliderPixel;
-    public ColorPicker colorReplacement1;
-    public Pane window;
-    public Stage stage = Main.getPrimaryStage();
-    public Button btbUploadImage;
-    public ToggleButton toggleBlur;
-    public ToggleButton togglePixel;
-    public TextField textThreshold;
-    public ToggleButton toggleThreshhold;
-    public ColorPicker colorReplacement2;
-    public ToggleButton toggleReplacement;
-    public ToggleButton toggleColorband;
-    public ToggleButton toggleBandRed;
-    public ToggleButton toggleBandBlue;
-    public ToggleButton toggleBandGreen;
-    public ToggleButton toggleMonochrom;
-    public ToggleButton toggleMask;
-
-    public final ToggleGroup COLORBANDGROUP = new ToggleGroup();
-    public Label textUrlImage;
-    public Label textUrlMask;
     public ImageView imgOutput;
-    public Button btnApplyFilters1;
-    public ProgressBar pbarSave;
-    public Button btnSave;
 
-    final int black = 0xFF000000;
-    final int white = 0xFFFFFFFF;
-
-    public ArrayList<Filter> chainfilter = new ArrayList<Filter>();
-
-    public BufferedImage outputSave = null;
     public Button addBlur;
     public Button addPixel;
     public Button addThresh;
     public Button addReplace;
     public Button addBand;
     public Button addMono;
-    public Label lblFilterAnwenden;
     public Button btnChain;
+    public Button btnClear;
+    public Button btbUploadMask;
+    public Button btbUploadImage;
+    public Button btnSave;
+
+    public ToggleButton toggleBandRed;
+    public ToggleButton toggleBandBlue;
+    public ToggleButton toggleBandGreen;
+    public ToggleButton toggleMask;
+
+    public Label textUrlImage;
+    public Label textUrlMask;
+    public Label lblFilterAnwenden;
+
+    public Slider sliderBlur;
+    public Slider sliderPixel;
+
+    public ColorPicker colorReplacement1;
+    public ColorPicker colorReplacement2;
+
+    public TextField textThreshold;
+
+    public Pane window;
+    public Stage stage = Main.getPrimaryStage();
+
+    public final ToggleGroup COLORBANDGROUP = new ToggleGroup();
+
+    final int black = 0xFF000000;
+    final int white = 0xFFFFFFFF;
+
+    public ArrayList<Filter> chainfilter = new ArrayList<Filter>();
+    public BufferedImage outputSave = null;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -95,7 +89,6 @@ public class Controller implements Initializable{
         addThresh.addEventHandler(ActionEvent.ACTION, new AddHandler());
         addReplace.addEventHandler(ActionEvent.ACTION, new AddHandler());
         addMono.addEventHandler(ActionEvent.ACTION, new AddHandler());
-
         imgInput.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Image uploadImage = selectImage(1);
             imgInput.setImage(uploadImage);
@@ -122,7 +115,7 @@ public class Controller implements Initializable{
 
     public void applyChainFilter(MouseEvent mouseEvent) {
         boolean maskToggled = toggleMask.isSelected();
-        BufferedImage image = null;
+        BufferedImage image;
         BufferedImage mask = null;
         try {
             image = ImageIO.read(new File(textUrlImage.getText()));
@@ -133,7 +126,6 @@ public class Controller implements Initializable{
             Alert.display("FEHLER", "Es wurde vergessen ein Bild zu setzten!");
             return;
         }
-        pbarSave.setVisible(true);
         BufferedImage output = image;
         try {
             if (maskToggled) {
@@ -159,6 +151,10 @@ public class Controller implements Initializable{
     public void reset(MouseEvent mouseEvent) {
         chainfilter.clear();
         lblFilterAnwenden.setText("");
+    }
+
+    public void warhowl(MouseEvent mouseEvent) {
+        //TODO: Implement this
     }
 
 
@@ -271,7 +267,7 @@ public class Controller implements Initializable{
 
     public void uploadImage(ActionEvent actionEvent) {
         Image uploadImage = selectImage(1);
-        if (uploadImage != null){
+        if (uploadImage != null) {
             btbUploadImage.setVisible(false);
             imgInput.setImage(uploadImage);
         }
@@ -280,7 +276,7 @@ public class Controller implements Initializable{
     public void uploadMask(ActionEvent actionEvent) {
         Image uploadImage = selectImage(2);
         ;
-        if (uploadImage != null){
+        if (uploadImage != null) {
             btbUploadMask.setVisible(false);
             imgMask.setImage(uploadImage);
         }
@@ -297,9 +293,9 @@ public class Controller implements Initializable{
         file = fileChooser.showOpenDialog(stage);
         if (file != null) {
 
-            try{
+            try {
                 image = ImageIO.read(new File(file.getAbsolutePath()));
-                ImageIO.write(image,"bmp",new File(file.getAbsolutePath()));
+                ImageIO.write(image, "bmp", new File(file.getAbsolutePath()));
                 if (choose == 1) {
                     textUrlImage.setText(file.getAbsolutePath());
                 } else {
@@ -308,11 +304,11 @@ public class Controller implements Initializable{
 
                 imageFound = true;
             } catch (IOException e) {
-                Alert.display("File was not found!","File was not found!");
+                Alert.display("File was not found!", "File was not found!");
             }
         }
         Image uploadImage = null;
-        if(imageFound){
+        if (imageFound) {
             uploadImage = SwingFXUtils.toFXImage(image, null);
         }
         return uploadImage;

@@ -15,19 +15,16 @@ public class Main extends Application  {
         launch(args);
     }
 
-    /*
-    STAGE -> SCENE
-     */
-
-
     @Override
     public void start(Stage primaryStage) throws Exception{
+        //primaryStage.initStyle(StageStyle.UNDECORATED);
         setPrimaryStage(primaryStage);
         Parent root = FXMLLoader.load(getClass().getResource("style.fxml"));
-        primaryStage.setTitle("Programmieren 2 Abgabe");
+        primaryStage.setTitle("Programmieren 2 Abgabe (Ahlers & Folwarzny)");
         Scene scene = new Scene(root, 1229, 526);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 

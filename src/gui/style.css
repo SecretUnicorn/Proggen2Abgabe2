@@ -35,7 +35,7 @@
 .add {
     -fx-font-size: 10px;
     -fx-border-color: white;
-    -fx-padding: 3 3 3 3;
+    -fx-padding: 3 7 3 7;
     -fx-background-radius: 50%;
     -fx-background-insets: 0;
 }
