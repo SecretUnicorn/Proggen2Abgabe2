@@ -84,7 +84,13 @@ public class PixelGraphicFilter extends AreaFilter {
         for (int i = heightPosPix - radius; i <= heightPosPix + radius - (isEven ? 1 : 0); i++) {
             for (int j = widthPosPix - radius; j <= widthPosPix + radius - (isEven ? 1 : 0); j++) {// i * width + j
                 if (i >= 0 && i < height && j >= 0 && j < width) {
-                    pixel[i * width + j] = blockColor;
+                    if (maskPixel != null) {
+                        if (maskPixel[i * width + j] != black) {
+                            pixel[i * width + j] = blockColor;
+                        }
+                    } else {
+                        pixel[i * width + j] = blockColor;
+                    }
                 }
             }
         }
