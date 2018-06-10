@@ -2,7 +2,7 @@ package Filter;
 
 import java.awt.image.BufferedImage;
 
-public class PixelFilter implements Filter {
+abstract class PixelFilter implements Filter {
     @Override
     public BufferedImage process(BufferedImage... image){
         BufferedImage image1, image2;

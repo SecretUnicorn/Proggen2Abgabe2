@@ -2,7 +2,7 @@ package Filter;
 
 import java.awt.image.BufferedImage;
 
-public class AreaFilter implements Filter {
+abstract class AreaFilter implements Filter{
 
     @Override
     public BufferedImage process(BufferedImage... image) {
