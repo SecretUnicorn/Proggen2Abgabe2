@@ -20,6 +20,8 @@ public class Main extends Application  {
         //primaryStage.initStyle(StageStyle.UNDECORATED);
         setPrimaryStage(primaryStage);
         Parent root = FXMLLoader.load(getClass().getResource("style.fxml"));
+
+        root.setStyle("-fx-background-image: url(img/background2.jpg)");
         primaryStage.setTitle("Programmieren 2 Abgabe (Ahlers & Folwarzny)");
         Scene scene = new Scene(root, 1229, 526);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());

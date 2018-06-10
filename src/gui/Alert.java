@@ -15,11 +15,10 @@ public class Alert {
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         window.setMinWidth(250);
-
         Label label = new Label();
-        label.setStyle("-fx-padding: 3 10 3 10; -fx-font-weight: bold; -fx-font-size: 18px;");
+        label.setStyle("-fx-padding: 3 10 3 10; -fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: white; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 5, 0.0, 0, 1);");
         label.setText(message);
-        Button closeButton = new Button("Close");
+        Button closeButton = new Button("OK");
         closeButton.setStyle("-fx-background-color: #090a0c,\n" +
                 "    linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),\n" +
                 "    linear-gradient(#20262b, #191d22),\n" +
@@ -39,7 +38,7 @@ public class Alert {
         layout.getChildren().addAll(label, closeButton);
         //alles zentriert
         layout.setAlignment(Pos.CENTER);
-
+        layout.setStyle("-fx-background-color: linear-gradient(#FF0000 0%, #6b1818 100%);");
         Scene scene = new Scene(layout);
         window.setScene(scene);
 

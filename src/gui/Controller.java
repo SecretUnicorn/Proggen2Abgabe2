@@ -189,9 +189,9 @@ public class Controller implements Initializable {
         Random random = new Random();
         String musicFile;
         if (random.nextBoolean()) {
-            musicFile = "airhorn.mp3";
+            musicFile = "src/sounds/airhorn.mp3";
         } else {
-            musicFile = "boing.mp3";
+            musicFile = "src/sounds/boing.mp3";
         }
 
         Media sound = new Media(new File(musicFile).toURI().toString());

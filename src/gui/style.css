@@ -1,7 +1,9 @@
+/*
 .root {
+    -fx-background-image: url("background2.jpg");
     -fx-background-image: url("../../../../background2.jpg");
 }
-
+ */
 .label {
     -fx-text-fill: white;
 }
