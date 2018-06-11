@@ -26,9 +26,9 @@ public class BlurFilter extends AreaFilter {
         int valueGreen = 0;
         int valueBlue = 0;
         for (int it = 0; it < neededForProcess.size(); it++) {
-            valueRed += (neededForProcess.get(it) >> 16) & 0xFF;
-            valueGreen += (neededForProcess.get(it) >> 8) & 0xFF;
-            valueBlue += (neededForProcess.get(it)) & 0xFF;
+            valueRed += ImageHelper.getRed(neededForProcess.get(it));
+            valueGreen +=  ImageHelper.getGreen(neededForProcess.get(it));
+            valueBlue += ImageHelper.getBlue(neededForProcess.get(it));
         }
         valueRed = Math.round(valueRed / (float)neededForProcess.size());
         valueGreen = Math.round(valueGreen / (float)neededForProcess.size());

@@ -13,9 +13,9 @@ public class ThresholdFilter extends PixelFilter {
         final int whiteRGB = 0xFFFFFF;
         final int blackRGB = 0x000000;
 
-        int r = (colorPixel >> 16) & 0xFF;
-        int g = (colorPixel >> 8) & 0xFF;
-        int b = (colorPixel) & 0xFF;
+        int r = ImageHelper.getRed(colorPixel);
+        int g = ImageHelper.getGreen(colorPixel);
+        int b = ImageHelper.getBlue(colorPixel);
 
         int brightness = (int) (0.2126 * r + 0.7152 * g + 0.0722 * b);
         int processedPixel = whiteRGB;

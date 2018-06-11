@@ -38,11 +38,7 @@ abstract class PixelFilter implements Filter {
             }
 
             BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            for (int a = 0; a < height; a++) {
-                for (int j = 0; j < width; j++) {
-                    result.setRGB(j, a, processedPixel[a * width + j]);
-                }
-            }
+            result = ImageHelper.setRGBValues(result, processedPixel, width, height);
             return result;
         }
         return null;

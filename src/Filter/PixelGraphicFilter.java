@@ -35,8 +35,7 @@ public class PixelGraphicFilter extends AreaFilter {
             maskPixel = new int[pixel.length];
 
             ImageHelper.getRGBValues(pixel, maskPixel, maskIsSet, image1, image2);
-            // wenn block 11 breit dann 11 / 2 = 5 mitte
-            // wenn block 11 breit dann ((11-(11/2))/2) radius
+
             for (int i = middlePixel; i < height; i += blockWidth) {
                 for (int j = middlePixel; j < width; j += blockWidth) {
                     calculate(pixel, maskPixel, i * width + j, width, height);
@@ -45,11 +44,7 @@ public class PixelGraphicFilter extends AreaFilter {
 
 
             BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            for (int a = 0; a < height; a++) {
-                for (int j = 0; j < width; j++) {
-                    result.setRGB(j, a, pixel[a * width + j]);
-                }
-            }
+            result = ImageHelper.setRGBValues(result,pixel, width,height);
             return result;
         }
         return null;
@@ -71,9 +66,9 @@ public class PixelGraphicFilter extends AreaFilter {
         int valueGreen = 0;
         int valueBlue = 0;
         for (int it = 0; it < neededForProcess.size(); it++) {
-            valueRed += (neededForProcess.get(it) >> 16) & 0xFF;
-            valueGreen += (neededForProcess.get(it) >> 8) & 0xFF;
-            valueBlue += (neededForProcess.get(it)) & 0xFF;
+            valueRed += ImageHelper.getRed(neededForProcess.get(it));
+            valueGreen += ImageHelper.getGreen(neededForProcess.get(it));
+            valueBlue += ImageHelper.getBlue(neededForProcess.get(it));
         }
         valueRed = Math.round(valueRed / (float) neededForProcess.size());
         valueGreen = Math.round(valueGreen / (float) neededForProcess.size());

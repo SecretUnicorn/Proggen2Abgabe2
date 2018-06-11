@@ -16,7 +16,28 @@ public class ImageHelper {
         }
     }
 
+    public static BufferedImage setRGBValues(BufferedImage result, int[] pixel, int width, int height) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                result.setRGB(j, i, pixel[i * width + j]);
+            }
+        }
+        return result;
+    }
+
     public static int setGreyPixel(int greyScaleValue) {
         return greyScaleValue << 16 | greyScaleValue << 8 | greyScaleValue;
+    }
+
+    public static int getRed(int rgbPixel) {
+        return (rgbPixel >> 16) & 0xFF;
+    }
+
+    public static int getGreen(int rgbPixel) {
+        return (rgbPixel >> 8) & 0xFF;
+    }
+
+    public static int getBlue(int rgbPixel) {
+        return rgbPixel & 0xFF;
     }
 }

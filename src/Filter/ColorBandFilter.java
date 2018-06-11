@@ -10,9 +10,9 @@ public class ColorBandFilter extends PixelFilter {
 
     @Override
     protected int calculate(int colorPixel) {
-        int r = (colorPixel >> 16) & 0xFF;
-        int g = (colorPixel >> 8) & 0xFF;
-        int b = (colorPixel) & 0xFF;
+        int r = ImageHelper.getRed(colorPixel);
+        int g = ImageHelper.getGreen(colorPixel);
+        int b = ImageHelper.getBlue(colorPixel);
 
 
         return oneColorPixel(r, g, b);
