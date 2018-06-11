@@ -36,8 +36,8 @@ public class PixelGraphicFilter extends AreaFilter {
 
             ImageHelper.getRGBValues(pixel, maskPixel, maskIsSet, image1, image2);
 
-            for (int i = middlePixel; i < height; i += blockWidth) {
-                for (int j = middlePixel; j < width; j += blockWidth) {
+            for (int i = middlePixel; i < height; i += (i+blockWidth >= height ? blockWidth / 2 : blockWidth )) {
+                for (int j = middlePixel; j < width; j += (j+blockWidth >= width ? blockWidth / 2 : blockWidth )) {
                     calculate(pixel, maskPixel, i * width + j, width, height);
                 }
             }

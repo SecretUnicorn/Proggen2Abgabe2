@@ -77,6 +77,7 @@ public class MainController {
         HashMap<String,Filter> filter = new HashMap<String,Filter>();
         filter.put("blur_3", new BlurFilter(3));
         filter.put("blur_5", new BlurFilter(5));
+        filter.put("blur_20", new BlurFilter(20));
         filter.put("monochrome", new MonochromFilter());
         filter.put("colorband_red", new ColorBandFilter(ColorBand.RED));
         filter.put("colorband_green", new ColorBandFilter(ColorBand.GREEN));
@@ -90,6 +91,7 @@ public class MainController {
         filter.put("pixel_20", new PixelGraphicFilter(20));
         filter.put("pixel_40", new PixelGraphicFilter(40));
         filter.put("pixel_60", new PixelGraphicFilter(60));
+        filter.put("pixel_100", new PixelGraphicFilter(100));
         Filter warhol = new ChainFilter();
         ((ChainFilter) warhol).addFilter(new ThresholdFilter(64,128,192));
         ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(0)));
