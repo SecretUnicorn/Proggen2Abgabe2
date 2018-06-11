@@ -5,6 +5,8 @@ import Filter.*;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -69,6 +71,8 @@ public class Controller implements Initializable {
     public TextField textPixel;
     public TextField textBlur;
 
+    public ProgressIndicator loading;
+
     public Pane window;
     public Stage stage = Main.getPrimaryStage();
 
@@ -77,11 +81,12 @@ public class Controller implements Initializable {
     final int black = 0x000000;
     final int white = 0xFFFFFF;
 
-    public Filter chainfilter = new ChainFilter();
+    public Filter chainfilterNormal = new ChainFilter();
+    public Filter chainfilterProcess = new ChainFilter();
     public Filter warhol = new ChainFilter();
     public BufferedImage outputSave = null;
 
-
+    Service service = new ProcessService();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -129,6 +134,11 @@ public class Controller implements Initializable {
             }
         });
 
+        service.setOnSucceeded(e -> {
+            service.reset();
+            loading.setVisible(false);
+        });
+
 
         //Styles
         toggleBandBlue.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
@@ -145,11 +155,12 @@ public class Controller implements Initializable {
     }
 
     public void applyChainFilter(MouseEvent mouseEvent) {
-        apply(chainfilter);
+        apply(chainfilterNormal);
     }
 
     public void reset(MouseEvent mouseEvent) {
-        ((ChainFilter) chainfilter).getArrayList().clear();
+        imgOutput.setImage(null);
+        ((ChainFilter) chainfilterNormal).getArrayList().clear();
         lblFilterAnwenden.setText("");
     }
 
@@ -164,32 +175,54 @@ public class Controller implements Initializable {
     }
 
     public void apply(Filter c) {
-        boolean maskToggled = toggleMask.switchOnProperty();
-        ChainFilter chain = (ChainFilter) c;
-        BufferedImage image;
-        BufferedImage mask = null;
-        try {
-            image = ImageIO.read(new File(textUrlImage.getText()));
-            if (maskToggled) {
-                mask = ImageIO.read(new File(textUrlMask.getText()));
-            }
-        } catch (IOException e) {
-            Alert.display("FEHLER", "Es wurde vergessen ein Bild zu setzten!");
-            return;
-        }
-        try {
-            if (maskToggled) {
-                outputSave = chain.process(image, mask);
+        chainfilterProcess = (ChainFilter) c;
+        loading.setVisible(true);
+        imgOutput.setVisible(false);
+        if (!service.isRunning())
+            service.start();
+    }
 
-            } else {
-                outputSave = chain.process(image);
-            }
-            Image outputImage = SwingFXUtils.toFXImage(outputSave, null);
-            btnSave.setVisible(true);
-            imgOutput.setImage(outputImage);
+    class ProcessService extends Service<Void> {
 
-        } catch (NullPointerException e) {
-            Alert.display("Kein Filter gewählt", "Bitte wählen Sie mindestens ein Filter aus");
+        @Override
+        protected Task<Void> createTask() {
+            return new Task<Void>() {
+                @Override
+
+                protected Void call() throws Exception {
+                    boolean maskToggled = toggleMask.switchOnProperty();
+                    ChainFilter chain = (ChainFilter) chainfilterNormal;
+                    BufferedImage image = null;
+                    BufferedImage mask = null;
+                    try {
+                        image = ImageIO.read(new File(textUrlImage.getText()));
+                        if (maskToggled) {
+                            mask = ImageIO.read(new File(textUrlMask.getText()));
+                        }
+                    } catch (IOException e) {
+                        loading.setVisible(false);
+                        Alert.display("FEHLER", "Es wurde vergessen ein Bild zu setzten!");
+
+                    }
+                    try {
+                        if (maskToggled) {
+                            outputSave = chain.process(image, mask);
+
+                        } else {
+                            outputSave = chain.process(image);
+                        }
+                        Image outputImage = SwingFXUtils.toFXImage(outputSave, null);
+                        btnSave.setVisible(true);
+                        imgOutput.setVisible(true);
+                        imgOutput.setImage(outputImage);
+
+                    } catch (NullPointerException e) {
+                        Alert.display("Kein Filter gewählt", "Bitte wählen Sie mindestens ein Filter aus");
+                    }
+                    return null;
+                }
+
+            };
         }
     }
 
@@ -261,15 +294,15 @@ public class Controller implements Initializable {
             String additional = "";
             if (e.getSource().equals(addBand)) {
                 if (toggleBandRed.isSelected()) {
-                    ((ChainFilter) chainfilter).addFilter(new ColorBandFilter(ColorBand.RED));
+                    ((ChainFilter) chainfilterNormal).addFilter(new ColorBandFilter(ColorBand.RED));
                     added = true;
                     additional = ColorBand.RED.toString();
                 } else if (toggleBandBlue.isSelected()) {
-                    ((ChainFilter) chainfilter).addFilter(new ColorBandFilter(ColorBand.BLUE));
+                    ((ChainFilter) chainfilterNormal).addFilter(new ColorBandFilter(ColorBand.BLUE));
                     added = true;
                     additional = ColorBand.BLUE.toString();
                 } else if (toggleBandGreen.isSelected()) {
-                    ((ChainFilter) chainfilter).addFilter(new ColorBandFilter(ColorBand.GREEN));
+                    ((ChainFilter) chainfilterNormal).addFilter(new ColorBandFilter(ColorBand.GREEN));
                     added = true;
                     additional = ColorBand.GREEN.toString();
                 } else {
@@ -277,7 +310,7 @@ public class Controller implements Initializable {
                 }
             } else if (e.getSource().equals(addBlur)) {
                 int blurRadius = (int) sliderBlur.getValue();
-                ((ChainFilter) chainfilter).addFilter(new BlurFilter(blurRadius));
+                ((ChainFilter) chainfilterNormal).addFilter(new BlurFilter(blurRadius));
                 additional += blurRadius;
                 added = true;
             } else if (e.getSource().equals(addReplace)) {
@@ -298,7 +331,7 @@ public class Controller implements Initializable {
                 } else {
                     replace = black;
                 }
-                ((ChainFilter) chainfilter).addFilter(new ColorReplacementFilter(replace, replaceWith));
+                ((ChainFilter) chainfilterNormal).addFilter(new ColorReplacementFilter(replace, replaceWith));
                 int r1, g1, b1, r2, g2, b2;
                 r1 = (replace >> 16) & 0xFF;
                 g1 = (replace >> 8) & 0xFF;
@@ -311,7 +344,7 @@ public class Controller implements Initializable {
                 added = true;
             } else if (e.getSource().equals(addPixel)) {
                 int pixelWidth = (int) sliderPixel.getValue();
-                ((ChainFilter) chainfilter).addFilter(new PixelGraphicFilter(pixelWidth));
+                ((ChainFilter) chainfilterNormal).addFilter(new PixelGraphicFilter(pixelWidth));
                 additional += pixelWidth;
                 added = true;
             } else if (e.getSource().equals(addThresh)) {
@@ -320,26 +353,26 @@ public class Controller implements Initializable {
                 for (int i = 0; i < tValues.length; i++) {
                     tValues[i] = Integer.parseInt(thresholdValues[i]);
                 }
-                ((ChainFilter) chainfilter).addFilter(new ThresholdFilter(tValues));
+                ((ChainFilter) chainfilterNormal).addFilter(new ThresholdFilter(tValues));
                 additional = textThreshold.getText();
                 added = true;
             } else if (e.getSource().equals(addMono)) {
-                ((ChainFilter) chainfilter).addFilter(new MonochromFilter());
+                ((ChainFilter) chainfilterNormal).addFilter(new MonochromFilter());
                 added = true;
             } else if (e.getSource().equals(addInvert)) {
-                ((ChainFilter) chainfilter).addFilter(new InvertFilter());
+                ((ChainFilter) chainfilterNormal).addFilter(new InvertFilter());
                 added = true;
             } else if (e.getSource().equals(addMutilation)) {
-                ((ChainFilter) chainfilter).addFilter(new PixelMutilation());
+                ((ChainFilter) chainfilterNormal).addFilter(new PixelMutilation());
                 added = true;
             }
             if (added) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(lblFilterAnwenden.getText());
-                if (((ChainFilter) chainfilter).getArrayList().size() != 1) {
+                if (((ChainFilter) chainfilterNormal).getArrayList().size() != 1) {
                     sb.append(" -> ");
                 }
-                sb.append(((ChainFilter) chainfilter).getArrayList().get(((ChainFilter) chainfilter).getArrayList().size() - 1).getName());
+                sb.append(((ChainFilter) chainfilterNormal).getArrayList().get(((ChainFilter) chainfilterNormal).getArrayList().size() - 1).getName());
                 if (!additional.isEmpty()) {
                     sb.append("(").append(additional).append(")");
                 }
