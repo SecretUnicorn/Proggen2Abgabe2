@@ -26,18 +26,38 @@ public class ImageHelper {
     }
 
     public static int setGreyPixel(int greyScaleValue) {
-        return greyScaleValue << 16 | greyScaleValue << 8 | greyScaleValue;
+        return setRed(greyScaleValue) | setGreen(greyScaleValue) | setBlue(greyScaleValue);
+    }
+
+    public static int setFullColorPixel(int r, int g, int b) {
+        return setRed(r) | setGreen(g) | setBlue(b);
     }
 
     public static int getRed(int rgbPixel) {
         return (rgbPixel >> 16) & 0xFF;
     }
 
+    public static int setRed(int redValue) {
+        return (redValue << 16);
+    }
+
     public static int getGreen(int rgbPixel) {
         return (rgbPixel >> 8) & 0xFF;
     }
 
+    public static int setGreen(int greenValue) {
+        return (greenValue << 8);
+    }
+
     public static int getBlue(int rgbPixel) {
         return rgbPixel & 0xFF;
+    }
+
+    public static int setBlue(int blueValue) {
+        return blueValue;
+    }
+
+    public static int getLuminosity(int r, int g, int b) {
+        return (int) (0.2126 * r + 0.7152 * g + 0.0722 * b);
     }
 }

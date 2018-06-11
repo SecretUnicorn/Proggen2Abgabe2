@@ -84,9 +84,9 @@ public class MainController {
         filter.put("threshold_128", new ThresholdFilter(128));
         filter.put("threshold_192", new ThresholdFilter(192));
         filter.put("multithreshold", new ThresholdFilter(64, 128, 192));
-        filter.put("colorreplacement_98", new ColorReplacementFilter((98 << 16) | (98 << 8) | 98));
-        filter.put("colorreplacement_160", new ColorReplacementFilter((160 << 16) | (160 << 8) | 160));
-        filter.put("colorreplacement_255", new ColorReplacementFilter((255 << 16) | (255 << 8) | 255));
+        filter.put("colorreplacement_98", new ColorReplacementFilter(ImageHelper.setGreyPixel(96)));
+        filter.put("colorreplacement_160", new ColorReplacementFilter(ImageHelper.setGreyPixel(160)));
+        filter.put("colorreplacement_255", new ColorReplacementFilter(ImageHelper.setGreyPixel(255)));
         filter.put("pixel_20", new PixelGraphicFilter(20));
         filter.put("pixel_40", new PixelGraphicFilter(40));
         filter.put("pixel_60", new PixelGraphicFilter(60));

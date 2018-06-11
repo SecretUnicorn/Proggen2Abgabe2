@@ -44,7 +44,7 @@ public class PixelGraphicFilter extends AreaFilter {
 
 
             BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            result = ImageHelper.setRGBValues(result,pixel, width,height);
+            result = ImageHelper.setRGBValues(result, pixel, width, height);
             return result;
         }
         return null;
@@ -74,7 +74,7 @@ public class PixelGraphicFilter extends AreaFilter {
         valueGreen = Math.round(valueGreen / (float) neededForProcess.size());
         valueBlue = Math.round(valueBlue / (float) neededForProcess.size());
 
-        int blockColor = (valueRed << 16) | (valueGreen << 8) | valueBlue;
+        int blockColor = ImageHelper.setFullColorPixel(valueRed, valueGreen, valueBlue);
 
         for (int i = heightPosPix - radius; i <= heightPosPix + radius - (isEven ? 1 : 0); i++) {
             for (int j = widthPosPix - radius; j <= widthPosPix + radius - (isEven ? 1 : 0); j++) {// i * width + j

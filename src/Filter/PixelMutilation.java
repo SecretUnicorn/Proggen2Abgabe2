@@ -3,6 +3,7 @@ package Filter;
 public class PixelMutilation extends AreaFilter {
 
     private int radius;
+
     public PixelMutilation(int radius) {
         this.radius = radius;
     }

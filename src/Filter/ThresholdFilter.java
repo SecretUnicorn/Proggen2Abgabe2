@@ -4,7 +4,7 @@ public class ThresholdFilter extends PixelFilter {
 
     private int[] greyValue;
 
-    public ThresholdFilter(int ... greyValue) {
+    public ThresholdFilter(int... greyValue) {
         this.greyValue = greyValue;
     }
 
@@ -17,7 +17,7 @@ public class ThresholdFilter extends PixelFilter {
         int g = ImageHelper.getGreen(colorPixel);
         int b = ImageHelper.getBlue(colorPixel);
 
-        int brightness = (int) (0.2126 * r + 0.7152 * g + 0.0722 * b);
+        int brightness = ImageHelper.getLuminosity(r, g, b);
         int processedPixel = whiteRGB;
         if (brightness < greyValue[0]) {
             processedPixel = blackRGB;
@@ -25,8 +25,8 @@ public class ThresholdFilter extends PixelFilter {
             for (int i = 0; i < greyValue.length; i++) {
                 if (i < greyValue.length - 1) {
                     if (brightness >= greyValue[i] && brightness < greyValue[i + 1]) {
-                       int value = greyValue[i] + (greyValue[i+1] - greyValue[i])/2;
-                       processedPixel = value << 16 | value << 8 | value;
+                        int value = greyValue[i] + (greyValue[i + 1] - greyValue[i]) / 2;
+                        processedPixel = ImageHelper.setGreyPixel(value);
                     }
                 }
             }
