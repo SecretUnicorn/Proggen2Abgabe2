@@ -15,7 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -28,7 +27,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -44,6 +42,8 @@ public class Controller implements Initializable {
     public Button addReplace;
     public Button addBand;
     public Button addMono;
+    public Button addInvert;
+    public Button addMutilation;
     public Button btnChain;
     public Button btnClear;
     public Button btbUploadMask;
@@ -58,8 +58,6 @@ public class Controller implements Initializable {
     public Label textUrlImage;
     public Label textUrlMask;
     public Label lblFilterAnwenden;
-    public Label lblBlur;
-    public Label lblPixel;
 
     public Slider sliderBlur;
     public Slider sliderPixel;
@@ -68,16 +66,19 @@ public class Controller implements Initializable {
     public ColorPicker colorReplacement2;
 
     public TextField textThreshold;
+    public TextField textPixel;
+    public TextField textBlur;
 
     public Pane window;
     public Stage stage = Main.getPrimaryStage();
 
     public final ToggleGroup COLORBANDGROUP = new ToggleGroup();
 
-    final int black = 0xFF000000;
-    final int white = 0xFFFFFFFF;
+    final int black = 0x000000;
+    final int white = 0xFFFFFF;
 
-    public ArrayList<Filter> chainfilter = new ArrayList<Filter>();
+    public Filter chainfilter = new ChainFilter();
+    public Filter warhol = new ChainFilter();
     public BufferedImage outputSave = null;
 
 
@@ -90,14 +91,17 @@ public class Controller implements Initializable {
         toggleBandRed.setToggleGroup(COLORBANDGROUP);
 
         //EventHandler
-        colorReplacement1.addEventHandler(ActionEvent.ACTION, new MyButtonHandler());
-        colorReplacement2.addEventHandler(ActionEvent.ACTION, new MyButtonHandler());
+        colorReplacement1.addEventHandler(ActionEvent.ACTION, new colorHandler());
+        colorReplacement2.addEventHandler(ActionEvent.ACTION, new colorHandler());
         addBand.addEventHandler(ActionEvent.ACTION, new AddHandler());
         addBlur.addEventHandler(ActionEvent.ACTION, new AddHandler());
         addPixel.addEventHandler(ActionEvent.ACTION, new AddHandler());
         addThresh.addEventHandler(ActionEvent.ACTION, new AddHandler());
         addReplace.addEventHandler(ActionEvent.ACTION, new AddHandler());
         addMono.addEventHandler(ActionEvent.ACTION, new AddHandler());
+        addInvert.addEventHandler(ActionEvent.ACTION, new AddHandler());
+        addMutilation.addEventHandler(ActionEvent.ACTION, new AddHandler());
+
         imgInput.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Image uploadImage = selectImage(1);
             imgInput.setImage(uploadImage);
@@ -109,19 +113,17 @@ public class Controller implements Initializable {
             btbUploadMask.setVisible(false);
         });
         sliderBlur.valueProperty().addListener(new ChangeListener() {
-
             @Override
             public void changed(ObservableValue arg0, Object arg1, Object arg2) {
-                lblBlur.textProperty().setValue(
+                textBlur.textProperty().setValue(
                         String.valueOf((int) sliderBlur.getValue()) + "px");
 
             }
         });
         sliderPixel.valueProperty().addListener(new ChangeListener() {
-
             @Override
             public void changed(ObservableValue arg0, Object arg1, Object arg2) {
-                lblPixel.textProperty().setValue(
+                textPixel.textProperty().setValue(
                         String.valueOf((int) sliderPixel.getValue()) + "px");
 
             }
@@ -129,8 +131,7 @@ public class Controller implements Initializable {
 
 
         //Styles
-        toggleBandBlue.setStyle("-fx-background-color: blue; -fx-text-fill: white;" +
-                "");
+        toggleBandBlue.setStyle("-fx-background-color: blue; -fx-text-fill: white;");
         toggleBandRed.setStyle("-fx-background-color: red; -fx-text-fill: white;");
         toggleBandGreen.setStyle("-fx-background-color: green; -fx-text-fill: white;");
         addBand.getStyleClass().add("add");
@@ -139,10 +140,32 @@ public class Controller implements Initializable {
         addThresh.getStyleClass().add("add");
         addPixel.getStyleClass().add("add");
         addBlur.getStyleClass().add("add");
+        addInvert.getStyleClass().add("add");
+        addMutilation.getStyleClass().add("add");
     }
 
     public void applyChainFilter(MouseEvent mouseEvent) {
+        apply(chainfilter);
+    }
+
+    public void reset(MouseEvent mouseEvent) {
+        ((ChainFilter) chainfilter).getArrayList().clear();
+        lblFilterAnwenden.setText("");
+    }
+
+    public void applywarhol(MouseEvent mouseEvent) {
+        ((ChainFilter) warhol).getArrayList().clear();
+        ((ChainFilter) warhol).addFilter(new ThresholdFilter(64, 128, 192));
+        ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(0)));
+        ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(96)));
+        ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(160)));
+        ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(255)));
+        apply(warhol);
+    }
+
+    public void apply(Filter c) {
         boolean maskToggled = toggleMask.switchOnProperty();
+        ChainFilter chain = (ChainFilter) c;
         BufferedImage image;
         BufferedImage mask = null;
         try {
@@ -154,35 +177,20 @@ public class Controller implements Initializable {
             Alert.display("FEHLER", "Es wurde vergessen ein Bild zu setzten!");
             return;
         }
-        BufferedImage output = image;
         try {
             if (maskToggled) {
-                for (int i = 0; i < chainfilter.size(); i++) {
-                    output = chainfilter.get(i).process(output, mask);
-                }
+                outputSave = chain.process(image, mask);
 
             } else {
-                for (int i = 0; i < chainfilter.size(); i++) {
-                    output = chainfilter.get(i).process(output);
-                }
+                outputSave = chain.process(image);
             }
-            outputSave = output;
-            Image outputImage = SwingFXUtils.toFXImage(output, null);
+            Image outputImage = SwingFXUtils.toFXImage(outputSave, null);
             btnSave.setVisible(true);
             imgOutput.setImage(outputImage);
 
         } catch (NullPointerException e) {
             Alert.display("Kein Filter gewählt", "Bitte wählen Sie mindestens ein Filter aus");
         }
-    }
-
-    public void reset(MouseEvent mouseEvent) {
-        chainfilter.clear();
-        lblFilterAnwenden.setText("");
-    }
-
-    public void warhowl(MouseEvent mouseEvent) {
-        //TODO: Implement this
     }
 
     public void sound(MouseEvent dragEvent) {
@@ -199,8 +207,32 @@ public class Controller implements Initializable {
         mediaPlayer.play();
     }
 
+    public void changePixel(ActionEvent actionEvent) {
+        String contentOfTextfield = textPixel.getText();
+        while (!checkIfCointainsNumbers(contentOfTextfield) && contentOfTextfield.length() != 0) {
+            contentOfTextfield = contentOfTextfield.substring(0, contentOfTextfield.length() - 1);
+        }
+        sliderPixel.setValue(Integer.parseInt(contentOfTextfield));
+    }
 
-    private class MyButtonHandler implements EventHandler<ActionEvent> {
+    public void changeBlur(ActionEvent actionEvent) {
+        String contentOfTextfield = textBlur.getText();
+        while (!checkIfCointainsNumbers(contentOfTextfield) && contentOfTextfield.length() != 0) {
+            contentOfTextfield = contentOfTextfield.substring(0, contentOfTextfield.length() - 1);
+        }
+        sliderBlur.setValue(Integer.parseInt(contentOfTextfield));
+    }
+
+    public boolean checkIfCointainsNumbers(String check) {
+        try {
+            int i = Integer.parseInt(check);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
+
+    private class colorHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent evt) {
             if (evt.getSource().equals(colorReplacement1)) {
@@ -229,15 +261,15 @@ public class Controller implements Initializable {
             String additional = "";
             if (e.getSource().equals(addBand)) {
                 if (toggleBandRed.isSelected()) {
-                    chainfilter.add(new ColorBandFilter(ColorBand.RED));
+                    ((ChainFilter) chainfilter).addFilter(new ColorBandFilter(ColorBand.RED));
                     added = true;
                     additional = ColorBand.RED.toString();
                 } else if (toggleBandBlue.isSelected()) {
-                    chainfilter.add(new ColorBandFilter(ColorBand.BLUE));
+                    ((ChainFilter) chainfilter).addFilter(new ColorBandFilter(ColorBand.BLUE));
                     added = true;
                     additional = ColorBand.BLUE.toString();
                 } else if (toggleBandGreen.isSelected()) {
-                    chainfilter.add(new ColorBandFilter(ColorBand.GREEN));
+                    ((ChainFilter) chainfilter).addFilter(new ColorBandFilter(ColorBand.GREEN));
                     added = true;
                     additional = ColorBand.GREEN.toString();
                 } else {
@@ -245,7 +277,7 @@ public class Controller implements Initializable {
                 }
             } else if (e.getSource().equals(addBlur)) {
                 int blurRadius = (int) sliderBlur.getValue();
-                chainfilter.add(new BlurFilter(blurRadius));
+                ((ChainFilter) chainfilter).addFilter(new BlurFilter(blurRadius));
                 additional += blurRadius;
                 added = true;
             } else if (e.getSource().equals(addReplace)) {
@@ -266,7 +298,7 @@ public class Controller implements Initializable {
                 } else {
                     replace = black;
                 }
-                chainfilter.add(new ColorReplacementFilter(replace, replaceWith));
+                ((ChainFilter) chainfilter).addFilter(new ColorReplacementFilter(replace, replaceWith));
                 int r1, g1, b1, r2, g2, b2;
                 r1 = (replace >> 16) & 0xFF;
                 g1 = (replace >> 8) & 0xFF;
@@ -278,31 +310,39 @@ public class Controller implements Initializable {
                 additional = r1 + "," + g1 + "," + b1 + " ~> " + r2 + "," + g2 + "," + b2;
                 added = true;
             } else if (e.getSource().equals(addPixel)) {
-                int pixelRadius = (int) sliderPixel.getValue();
-                //chainfilter.add(new Pixel(pixelRadius));
-                additional += pixelRadius;
-                added = false;
+                int pixelWidth = (int) sliderPixel.getValue();
+                ((ChainFilter) chainfilter).addFilter(new PixelGraphicFilter(pixelWidth));
+                additional += pixelWidth;
+                added = true;
             } else if (e.getSource().equals(addThresh)) {
                 String thresholdValues[] = textThreshold.getText().split(",");
                 int tValues[] = new int[thresholdValues.length];
                 for (int i = 0; i < tValues.length; i++) {
                     tValues[i] = Integer.parseInt(thresholdValues[i]);
                 }
-                chainfilter.add(new ThresholdFilter(tValues));
+                ((ChainFilter) chainfilter).addFilter(new ThresholdFilter(tValues));
                 additional = textThreshold.getText();
                 added = true;
             } else if (e.getSource().equals(addMono)) {
-                chainfilter.add(new MonochromFilter());
+                ((ChainFilter) chainfilter).addFilter(new MonochromFilter());
+                added = true;
+            } else if (e.getSource().equals(addInvert)) {
+                ((ChainFilter) chainfilter).addFilter(new InvertFilter());
+                added = true;
+            } else if (e.getSource().equals(addMutilation)) {
+                ((ChainFilter) chainfilter).addFilter(new PixelMutilation());
                 added = true;
             }
             if (added) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(lblFilterAnwenden.getText());
-                if (chainfilter.size() != 1) {
+                if (((ChainFilter) chainfilter).getArrayList().size() != 1) {
                     sb.append(" -> ");
                 }
-                sb.append(chainfilter.get(chainfilter.size() - 1).getName());
-                sb.append("(").append(additional).append(")");
+                sb.append(((ChainFilter) chainfilter).getArrayList().get(((ChainFilter) chainfilter).getArrayList().size() - 1).getName());
+                if (!additional.isEmpty()) {
+                    sb.append("(").append(additional).append(")");
+                }
                 lblFilterAnwenden.setText(sb.toString());
             }
         }

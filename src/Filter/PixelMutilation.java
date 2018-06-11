@@ -1,10 +1,14 @@
 package Filter;
 
+import java.util.Random;
+
 public class PixelMutilation extends AreaFilter {
 
     private int radius;
-    public PixelMutilation(int radius) {
-        this.radius = radius;
+
+    public PixelMutilation() {
+        Random r = new Random();
+        this.radius = r.nextInt(20);
     }
 
     @Override

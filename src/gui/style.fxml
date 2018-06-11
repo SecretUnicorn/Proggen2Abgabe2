@@ -44,13 +44,11 @@
         <Button fx:id="btnClear" layoutX="473.0" layoutY="422.0" mnemonicParsing="false" onMouseClicked="#reset"
                 text="Reset"/>
         <Label layoutX="349.0" layoutY="62.0" text="Blur"/>
-        <Slider fx:id="sliderBlur" blockIncrement="1.0" layoutX="394.0" layoutY="60.0" majorTickUnit="2.0" max="19.0"
-                min="1.0" minorTickCount="1" prefHeight="38.0" prefWidth="200.0" showTickLabels="true"
-                showTickMarks="true"/>
+        <Slider fx:id="sliderBlur" blockIncrement="1.0" layoutX="394.0" layoutY="60.0" majorTickUnit="10.0" max="50.0"
+                minorTickCount="5" prefHeight="38.0" prefWidth="200.0" showTickLabels="true" showTickMarks="true"/>
         <Label layoutX="321.0" layoutY="115.0" text="Pixelfilter"/>
-        <Slider fx:id="sliderPixel" blockIncrement="1.0" layoutX="395.0" layoutY="113.0" majorTickUnit="2.0" max="19.0"
-                min="3.0" minorTickCount="1" prefHeight="38.0" prefWidth="200.0" showTickLabels="true"
-                showTickMarks="true"/>
+        <Slider fx:id="sliderPixel" blockIncrement="1.0" layoutX="395.0" layoutY="113.0" minorTickCount="5"
+                prefHeight="38.0" prefWidth="200.0" showTickLabels="true" showTickMarks="true"/>
         <Button fx:id="btbUploadImage" layoutX="86.0" layoutY="141.0" mnemonicParsing="false" onAction="#uploadImage"
                 styleClass="buttonMain" text="upload Image..."/>
         <Separator layoutX="303.0" layoutY="239.0" orientation="VERTICAL" prefHeight="200.0" scaleY="4.0"/>
@@ -109,7 +107,7 @@
             </font>
         </Label>
         <Button fx:id="btnApplyFilters1" layoutX="550.0" layoutY="422.0" mnemonicParsing="false"
-                onMouseClicked="#warhowl" text="Warhol anwenden"/>
+                onMouseClicked="#applywarhol" text="Warhol anwenden"/>
 
         <Label layoutX="896.0" layoutY="6.0" text="Output">
             <font>
@@ -131,17 +129,17 @@
                 <Font size="30.0"/>
             </font>
         </Label>
-        <Button fx:id="addBlur" layoutX="641.0" layoutY="59.0" mnemonicParsing="false" prefHeight="1.0" prefWidth="6.0"
+        <Button fx:id="addBlur" layoutX="652.0" layoutY="59.0" mnemonicParsing="false" prefHeight="1.0" prefWidth="6.0"
                 text="+" textAlignment="CENTER"/>
-        <Button fx:id="addPixel" layoutX="641.0" layoutY="114.0" mnemonicParsing="false" prefHeight="1.0"
+        <Button fx:id="addPixel" layoutX="652.0" layoutY="114.0" mnemonicParsing="false" prefHeight="1.0"
                 prefWidth="6.0" text="+" textAlignment="CENTER"/>
-        <Button fx:id="addThresh" layoutX="641.0" layoutY="164.0" mnemonicParsing="false" prefHeight="1.0"
+        <Button fx:id="addThresh" layoutX="652.0" layoutY="164.0" mnemonicParsing="false" prefHeight="1.0"
                 prefWidth="6.0" text="+" textAlignment="CENTER"/>
-        <Button fx:id="addReplace" layoutX="641.0" layoutY="214.0" mnemonicParsing="false" prefHeight="1.0"
+        <Button fx:id="addReplace" layoutX="652.0" layoutY="214.0" mnemonicParsing="false" prefHeight="1.0"
                 prefWidth="6.0" text="+" textAlignment="CENTER"/>
-        <Button fx:id="addBand" layoutX="641.0" layoutY="299.0" mnemonicParsing="false" prefHeight="1.0" prefWidth="6.0"
+        <Button fx:id="addBand" layoutX="652.0" layoutY="299.0" mnemonicParsing="false" prefHeight="1.0" prefWidth="6.0"
                 text="+" textAlignment="CENTER"/>
-        <Button fx:id="addMono" layoutX="641.0" layoutY="337.0" mnemonicParsing="false" prefHeight="1.0" prefWidth="6.0"
+        <Button fx:id="addMono" layoutX="396.0" layoutY="337.0" mnemonicParsing="false" prefHeight="1.0" prefWidth="6.0"
                 text="+" textAlignment="CENTER"/>
         <Label fx:id="lblFilterAnwenden" alignment="CENTER" layoutX="311.0" layoutY="458.0" prefHeight="69.0"
                prefWidth="383.0" textAlignment="CENTER" wrapText="true">
@@ -151,17 +149,9 @@
         </Label>
         <Button fx:id="btnChain" layoutX="310.0" layoutY="422.0" mnemonicParsing="false"
                 onMouseClicked="#applyChainFilter" text="ChainFilter anwenden"/>
-        <Label fx:id="lblBlur" contentDisplay="CENTER" layoutX="598.0" layoutY="65.0" prefHeight="17.0" prefWidth="32.0"
-               style="-fx-alignment: center;" text="1px" textAlignment="CENTER"/>
         <ToggleSwitch fx:id="toggleMask" layoutX="73.0" layoutY="260.0">
 
         </ToggleSwitch>
-        <Label fx:id="lblPixel" contentDisplay="CENTER" layoutX="598.0" layoutY="115.0" prefHeight="17.0"
-               prefWidth="32.0" style="-fx-alignment: center;" text="1px" textAlignment="CENTER">
-            <font>
-                <Font name="System Italic" size="13.0"/>
-            </font>
-        </Label>
         <VBox alignment="CENTER" layoutX="696.0" layoutY="63.0" prefHeight="364.0" prefWidth="500.0" spacing="10">
             <ImageView fx:id="imgOutput" fitHeight="339.0" fitWidth="524.0" layoutX="693.0" layoutY="51.0"
                        nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
@@ -172,5 +162,15 @@
             <Button fx:id="btnSave" layoutX="862.0" layoutY="415.0" mnemonicParsing="false" onAction="#savePicture"
                     text="Bild speichern unter..." visible="false"/>
         </VBox>
+        <TextField fx:id="textPixel" alignment="CENTER" layoutX="596.0" layoutY="113.0" onAction="#changePixel"
+                   prefHeight="27.0" prefWidth="53.0" promptText="1px"/>
+        <TextField fx:id="textBlur" alignment="CENTER" layoutX="596.0" layoutY="58.0" onAction="#changeBlur"
+                   prefHeight="27.0" prefWidth="53.0" promptText="1px"/>
+        <Label layoutX="435.0" layoutY="341.0" text="Invert"/>
+        <Button fx:id="addInvert" layoutX="476.0" layoutY="336.0" mnemonicParsing="false" prefHeight="1.0"
+                prefWidth="6.0" text="+" textAlignment="CENTER"/>
+        <Label layoutX="527.0" layoutY="341.0" text="???"/>
+        <Button fx:id="addMutilation" layoutX="558.0" layoutY="336.0" mnemonicParsing="false" prefHeight="1.0"
+                prefWidth="6.0" text="+" textAlignment="CENTER"/>
     </children>
 </Pane>

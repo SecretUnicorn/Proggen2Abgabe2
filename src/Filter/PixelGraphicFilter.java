@@ -96,4 +96,9 @@ public class PixelGraphicFilter extends AreaFilter {
         }
         return pixel[index];
     }
+
+    public String getName() {
+        return "PixelGraphicFilter";
+    }
+
 }

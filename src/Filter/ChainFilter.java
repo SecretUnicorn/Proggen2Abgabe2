@@ -25,8 +25,16 @@ public class ChainFilter implements Filter {
         return null;
     }
 
-    public void  addFilter(Filter filter) {
+    public void addFilter(Filter filter) {
         this.filter.add(filter);
+    }
+
+    public String getName() {
+        return "";
+    }
+
+    public ArrayList<Filter> getArrayList() {
+        return filter;
     }
 
 }
