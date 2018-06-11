@@ -3,7 +3,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,28 +16,60 @@ public class MainController {
         BufferedImage image;
         BufferedImage mask;
         String newFilePath;
+        StringBuilder sb = new StringBuilder();
         Filter filter = null;
+        boolean testingMode = false;
         if(allFilters.containsKey(args[0])) {
             filter = allFilters.get(args[0]);
         } else if(args[0].equals("test")) {
             System.out.println("There will be complete chaos D:");
+            testingMode = true;
         }
         else {
             filter = filterRequest(allFilters);
         }
-        try {
-            image = ImageIO.read(new File(args[1]));
-            if(args[2].equals("-m")) {
-                mask = ImageIO.read(new File(args[3]));
-                image = filter.process(image, mask);
-                newFilePath = args[4];
-            } else {
-                image = filter.process(image);
-                newFilePath = args[2];
+        if(!testingMode) {
+            try {
+                image = ImageIO.read(new File(args[1]));
+                if (args[2].equals("-m")) {
+                    mask = ImageIO.read(new File(args[3]));
+                    image = filter.process(image, mask);
+                    newFilePath = args[4];
+                } else {
+                    image = filter.process(image);
+                    newFilePath = args[2];
+                }
+                ImageIO.write(image, "bmp", new File(newFilePath));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            ImageIO.write(image, "bmp", new File(newFilePath));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            try {
+                BufferedImage testingImage = null;
+                image = ImageIO.read(new File(args[1]));
+                if (args[2].equals("-m")) {
+                    mask = ImageIO.read(new File(args[3]));
+                    newFilePath = args[4];
+                    for(Map.Entry e: allFilters.entrySet()) {
+                        filter = (Filter) e.getValue();
+                        testingImage = filter.process(image,mask);
+                        String newFileName = sb.append(newFilePath).append("_").append(e.getKey()).append(".bmp").toString();
+                        ImageIO.write(testingImage, "bmp", new File(newFileName));
+                        sb.delete(0,newFileName.length());
+                    }
+                } else {
+                    newFilePath = args[2];
+                    for(Map.Entry e: allFilters.entrySet()) {
+                        filter = (Filter) e.getValue();
+                        testingImage = filter.process(image);
+                        String newFileName = sb.append(newFilePath).append("_").append(e.getKey()).append(".bmp").toString();
+                        ImageIO.write(testingImage, "bmp", new File(newFileName));
+                        sb.delete(0,newFileName.length());
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -61,10 +92,10 @@ public class MainController {
         filter.put("pixel_60", new PixelGraphicFilter(60));
         Filter warhol = new ChainFilter();
         ((ChainFilter) warhol).addFilter(new ThresholdFilter(64,128,192));
-        ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(0));
-        ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(98));
-        ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(160));
-        ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(255));
+        ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(0)));
+        ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(96)));
+        ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(160)));
+        ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(255)));
         filter.put("warhol", warhol);
         return filter;
     }
