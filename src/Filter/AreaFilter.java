@@ -24,10 +24,8 @@ abstract class AreaFilter implements Filter {
 
             ImageHelper.getRGBValues(pixel, maskPixel, maskIsSet, image1, image2);
 
-            int i = 0;
-            for (int specPixel : pixel) {
+            for (int i = 0; i < pixel.length; i++) {
                 processedPixel[i] = calculate(pixel, maskPixel, i, width, height);
-                i++;
             }
 
             BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);

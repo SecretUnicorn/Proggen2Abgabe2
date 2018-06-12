@@ -56,7 +56,7 @@ public class PixelGraphicFilter extends AreaFilter {
         int heightPosPix = index / width;
         int widthPosPix = index % width;
         for (int i = heightPosPix - radius; i <= heightPosPix + radius - (isEven ? 1 : 0); i++) {
-            for (int j = widthPosPix - radius; j <= widthPosPix + radius - (isEven ? 1 : 0); j++) {// i * width + j
+            for (int j = widthPosPix - radius; j <= widthPosPix + radius - (isEven ? 1 : 0); j++) {
                 if (i >= 0 && i < height && j >= 0 && j < width) {
                     neededForProcess.add(pixel[i * width + j]);
                 }
@@ -77,7 +77,7 @@ public class PixelGraphicFilter extends AreaFilter {
         int blockColor = ImageHelper.setFullColorPixel(valueRed, valueGreen, valueBlue);
 
         for (int i = heightPosPix - radius; i <= heightPosPix + radius - (isEven ? 1 : 0); i++) {
-            for (int j = widthPosPix - radius; j <= widthPosPix + radius - (isEven ? 1 : 0); j++) {// i * width + j
+            for (int j = widthPosPix - radius; j <= widthPosPix + radius - (isEven ? 1 : 0); j++) {
                 if (i >= 0 && i < height && j >= 0 && j < width) {
                     if (maskPixel != null) {
                         if (maskPixel[i * width + j] != black) {

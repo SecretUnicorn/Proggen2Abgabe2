@@ -10,7 +10,19 @@ import Filter.*;
 
 import javax.imageio.ImageIO;
 
+/**
+ * MainController
+ * Class to execute main function.
+ * Starts with args given and processes an image,
+ * with a given image filter.
+ */
 public class MainController {
+
+    /**
+     * Main function that starts with the programm arguments.
+     * @param args
+     * @throws IOException because main writes a new image
+     */
     public static void main(String[] args) throws IOException {
         HashMap<String,Filter> allFilters = initMap();
         BufferedImage image;
@@ -22,7 +34,6 @@ public class MainController {
         if(allFilters.containsKey(args[0])) {
             filter = allFilters.get(args[0]);
         } else if(args[0].equals("test")) {
-            System.out.println("There will be complete chaos D:");
             testingMode = true;
         }
         else {
@@ -45,7 +56,7 @@ public class MainController {
             }
         } else {
             try {
-                BufferedImage testingImage = null;
+                BufferedImage testingImage;
                 image = ImageIO.read(new File(args[1]));
                 if (args[2].equals("-m")) {
                     mask = ImageIO.read(new File(args[3]));
@@ -73,11 +84,19 @@ public class MainController {
         }
     }
 
+    /**
+     * Method to initialize a HashMap.
+     * Initializes a HashMap filled with String keys, that matches a certain
+     * initialized Filter.
+     * @return a complete <code>HashMap<String,Filter></code>
+     */
     public static HashMap<String, Filter> initMap() {
         HashMap<String,Filter> filter = new HashMap<String,Filter>();
         filter.put("blur_3", new BlurFilter(3));
         filter.put("blur_5", new BlurFilter(5));
-        filter.put("blur_20", new BlurFilter(20));
+        filter.put("minimum_3", new MinimumFilter(3));
+        filter.put("minimum_5", new MinimumFilter(5));
+        filter.put("invert", new InvertFilter());
         filter.put("monochrome", new MonochromFilter());
         filter.put("colorband_red", new ColorBandFilter(ColorBand.RED));
         filter.put("colorband_green", new ColorBandFilter(ColorBand.GREEN));
@@ -99,9 +118,19 @@ public class MainController {
         ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(160)));
         ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(255)));
         filter.put("warhol", warhol);
+        filter.put("mutilation", new PixelMutilation());
         return filter;
     }
 
+    /**
+     * Handles the request for a Filter.
+     * Checks if HashMap has a matching key, if not prints all entries of HashMap.
+     * Then User can type a filter he wants to use.
+     * Until the first time a filter is written correctly.
+     * @param filterHashMap containing all keys and values to check
+     * @return a filter that matches a key.
+     * @throws IOException
+     */
     public static Filter filterRequest(HashMap<String, Filter> filterHashMap) throws IOException{
         boolean filterFound = false;
         BufferedReader b = new BufferedReader(new InputStreamReader(System.in));

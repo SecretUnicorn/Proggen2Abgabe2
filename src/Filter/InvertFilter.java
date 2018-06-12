@@ -4,10 +4,13 @@ public class InvertFilter extends PixelFilter {
 
     @Override
     protected int calculate(int colorPixel) {
-        int r = (colorPixel >> 16) & 0xFF;
-        int g = (colorPixel >> 8) & 0xFF;
-        int b = (colorPixel) & 0xFF;
-        return (255 - r << 16) | (255 - g << 8) | (255 - b);
+        int r = ImageHelper.getRed(colorPixel);
+        r = 255 - r;
+        int g = ImageHelper.getGreen(colorPixel);
+        g = 255 - g;
+        int b = ImageHelper.getBlue(colorPixel);
+        b = 255 - b;
+        return ImageHelper.setFullColorPixel(r,g,b);
     }
 
     @Override
