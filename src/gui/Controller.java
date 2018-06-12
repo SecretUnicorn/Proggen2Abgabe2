@@ -146,6 +146,7 @@ public class Controller implements Initializable {
         service.setOnSucceeded(e -> {
             service.reset();
             loading.setVisible(false);
+            btnSave.setVisible(false);
         });
 
 
