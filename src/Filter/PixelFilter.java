@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 
 abstract class PixelFilter implements Filter {
     @Override
-    public BufferedImage process(BufferedImage... image){
+    public BufferedImage process(BufferedImage... image) {
         BufferedImage image1, image2;
         int[] pixel;
         int[] maskPixel;
@@ -21,12 +21,12 @@ abstract class PixelFilter implements Filter {
             processedPixel = new int[pixel.length];
             maskPixel = new int[pixel.length];
 
-            ImageHelper.getRGBValues(pixel,maskPixel,maskIsSet,image1,image2);
+            ImageHelper.getRGBValues(pixel, maskPixel, maskIsSet, image1, image2);
 
             int i = 0;
             for (int specPixel : pixel) {
-                if(maskIsSet) {
-                    if(maskPixel[i] != black) {
+                if (maskIsSet) {
+                    if (maskPixel[i] != black) {
                         processedPixel[i] = calculate(specPixel);
                     } else {
                         processedPixel[i] = specPixel;
@@ -38,11 +38,7 @@ abstract class PixelFilter implements Filter {
             }
 
             BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-            for (int a = 0; a < height; a++) {
-                for (int j = 0; j < width; j++) {
-                    result.setRGB(j, a, processedPixel[a * width + j]);
-                }
-            }
+            result = ImageHelper.setRGBValues(result, processedPixel, width, height);
             return result;
         }
         return null;

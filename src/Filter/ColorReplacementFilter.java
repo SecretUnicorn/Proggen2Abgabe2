@@ -18,10 +18,10 @@ public class ColorReplacementFilter extends PixelFilter {
 
     @Override
     protected int calculate(int colorPixel) {
-        int r = (colorPixel >> 16) & 0xFF;
-        int g = (colorPixel >> 8) & 0xFF;
-        int b = (colorPixel) & 0xFF;
-        int newColorPixel = r << 16 | g << 8 | b;
+        int r = ImageHelper.getRed(colorPixel);
+        int g = ImageHelper.getGreen(colorPixel);
+        int b = ImageHelper.getBlue(colorPixel);
+        int newColorPixel = ImageHelper.setFullColorPixel(r, g, b);
         if (newColorPixel == toReplace) {
             return replaceWith;
         }
@@ -33,7 +33,7 @@ public class ColorReplacementFilter extends PixelFilter {
         int r1 = r.nextInt(256);
         int r2 = r.nextInt(256);
         int r3 = r.nextInt(256);
-        return (r1 << 16) | ((r2) << 8) | r3;
+        return ImageHelper.setFullColorPixel(r1, r2, r3);
     }
 
     @Override

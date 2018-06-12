@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class ChainFilter implements Filter {
     private ArrayList<Filter> filter = new ArrayList<>();
+
     @Override
     public BufferedImage process(BufferedImage... image) {
         BufferedImage image1, image2;
@@ -13,9 +14,9 @@ public class ChainFilter implements Filter {
         boolean maskIsSet = image2 != null;
 
         if (image1 != null) {
-            for(int i = 0; i < filter.size(); i++) {
+            for (int i = 0; i < filter.size(); i++) {
                 if (maskIsSet) {
-                    image1 = filter.get(i).process(image1,image2);
+                    image1 = filter.get(i).process(image1, image2);
                 } else {
                     image1 = filter.get(i).process(image1);
                 }
