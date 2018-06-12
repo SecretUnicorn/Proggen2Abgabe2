@@ -118,6 +118,7 @@ public class MainController {
         ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(160)));
         ((ChainFilter) warhol).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(255)));
         filter.put("warhol", warhol);
+        filter.put("sharpen",new SharpenFilter());
         filter.put("mutilation", new PixelMutilation());
         return filter;
     }

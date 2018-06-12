@@ -25,6 +25,16 @@ public class ImageHelper {
         return result;
     }
 
+    public static int rangeChecker(int colorValue) {
+        if (colorValue < 0) {
+            return 0;
+        } else if (colorValue > 255) {
+            return 255;
+        } else {
+            return colorValue;
+        }
+    }
+
     public static int setGreyPixel(int greyScaleValue) {
         return setRed(greyScaleValue) | setGreen(greyScaleValue) | setBlue(greyScaleValue);
     }
