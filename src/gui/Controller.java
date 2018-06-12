@@ -1,8 +1,6 @@
 package gui;
 
 import Filter.*;
-//Dustin the gui guy
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
