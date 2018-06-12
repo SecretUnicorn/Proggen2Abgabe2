@@ -203,7 +203,7 @@ public class Controller implements Initializable {
 
                 protected Void call() throws Exception {
                     boolean maskToggled = toggleMask.switchOnProperty();
-                    ChainFilter chain = (ChainFilter) chainfilterNormal;
+                    ChainFilter chain = (ChainFilter) chainfilterProcess;
                     BufferedImage image = null;
                     BufferedImage mask = null;
                     try {
