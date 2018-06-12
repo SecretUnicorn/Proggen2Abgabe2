@@ -183,8 +183,8 @@
                 prefWidth="6.0" text="+" textAlignment="CENTER"/>
         <ProgressIndicator fx:id="loading" layoutX="927.0" layoutY="200.0" scaleX="3.0" scaleY="3.0" visible="false"/>
         <Label layoutX="321.0" layoutY="165.0" text="Minimum"/>
-        <Slider fx:id="sliderMinimum" blockIncrement="1.0" layoutX="395.0" layoutY="163.0" majorTickUnit="10.0"
-                max="50.0" minorTickCount="5" prefHeight="38.0" prefWidth="200.0" showTickLabels="true"
+        <Slider fx:id="sliderMinimum" blockIncrement="1.0" layoutX="395.0" layoutY="163.0" majorTickUnit="3.0"
+                max="15.0" minorTickCount="1" prefHeight="38.0" prefWidth="200.0" showTickLabels="true"
                 showTickMarks="true"/>
         <Button fx:id="addMinimum" layoutX="652.0" layoutY="163.0" mnemonicParsing="false" prefHeight="1.0"
                 prefWidth="6.0" text="+" textAlignment="CENTER"/>

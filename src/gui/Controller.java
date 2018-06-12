@@ -1,8 +1,6 @@
 package gui;
 
 import Filter.*;
-//Dustin the gui guy
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
@@ -148,6 +146,7 @@ public class Controller implements Initializable {
         service.setOnSucceeded(e -> {
             service.reset();
             loading.setVisible(false);
+
         });
 
 
@@ -172,6 +171,7 @@ public class Controller implements Initializable {
 
     public void reset(MouseEvent mouseEvent) {
         imgOutput.setImage(null);
+        btnSave.setVisible(false);
         ((ChainFilter) chainfilterNormal).getArrayList().clear();
         lblFilterAnwenden.setText("");
     }
