@@ -85,6 +85,9 @@ public class Controller implements Initializable {
     public Filter chainfilterProcess = new ChainFilter();
     public Filter warhol = new ChainFilter();
     public BufferedImage outputSave = null;
+    public Slider sliderMinimum;
+    public Button addMinimum;
+    public TextField textMinimum;
 
     Service service = new ProcessService();
 
@@ -106,7 +109,7 @@ public class Controller implements Initializable {
         addMono.addEventHandler(ActionEvent.ACTION, new AddHandler());
         addInvert.addEventHandler(ActionEvent.ACTION, new AddHandler());
         addMutilation.addEventHandler(ActionEvent.ACTION, new AddHandler());
-
+        addMinimum.addEventHandler(ActionEvent.ACTION, new AddHandler());
         imgInput.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Image uploadImage = selectImage(1);
             imgInput.setImage(uploadImage);
@@ -133,6 +136,14 @@ public class Controller implements Initializable {
 
             }
         });
+        sliderMinimum.valueProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+                textMinimum.textProperty().setValue(
+                        String.valueOf((int) sliderMinimum.getValue()) + "px");
+
+            }
+        });
 
         service.setOnSucceeded(e -> {
             service.reset();
@@ -152,6 +163,7 @@ public class Controller implements Initializable {
         addBlur.getStyleClass().add("add");
         addInvert.getStyleClass().add("add");
         addMutilation.getStyleClass().add("add");
+        addMinimum.getStyleClass().add("add");
     }
 
     public void applyChainFilter(MouseEvent mouseEvent) {
@@ -254,6 +266,14 @@ public class Controller implements Initializable {
             contentOfTextfield = contentOfTextfield.substring(0, contentOfTextfield.length() - 1);
         }
         sliderBlur.setValue(Integer.parseInt(contentOfTextfield));
+    }
+
+    public void changeMinimum(ActionEvent actionEvent) {
+        String contentOfTextfield = textMinimum.getText();
+        while (!checkIfCointainsNumbers(contentOfTextfield) && contentOfTextfield.length() != 0) {
+            contentOfTextfield = contentOfTextfield.substring(0, contentOfTextfield.length() - 1);
+        }
+        sliderMinimum.setValue(Integer.parseInt(contentOfTextfield));
     }
 
     public boolean checkIfCointainsNumbers(String check) {
@@ -364,6 +384,11 @@ public class Controller implements Initializable {
                 added = true;
             } else if (e.getSource().equals(addMutilation)) {
                 ((ChainFilter) chainfilterNormal).addFilter(new PixelMutilation());
+                added = true;
+            } else if (e.getSource().equals(addMinimum)) {
+                int pixelRadius = (int) sliderMinimum.getValue();
+                ((ChainFilter) chainfilterNormal).addFilter(new MinimumFilter(pixelRadius));
+                additional += pixelRadius;
                 added = true;
             }
             if (added) {

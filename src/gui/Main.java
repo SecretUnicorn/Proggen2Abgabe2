@@ -23,7 +23,7 @@ public class Main extends Application  {
 
         root.setStyle("-fx-background-image: url(img/background2.jpg)");
         primaryStage.setTitle("Programmieren 2 Abgabe (Ahlers & Folwarzny)");
-        Scene scene = new Scene(root, 1229, 526);
+        Scene scene = new Scene(root, 1229, 620);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         primaryStage.setScene(scene);
