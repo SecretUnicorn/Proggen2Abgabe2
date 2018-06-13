@@ -7,10 +7,26 @@ public class MinimumFilter extends AreaFilter {
     private int radius;
 
 
+    /**
+     * Constructor of MinimumFilter.
+     * @param radius initializes the radius of pixels to calculate
+     */
     public MinimumFilter(int radius) {
         this.radius = radius;
     }
 
+    /**
+     * Considers the color values in range of the radius around the pixel.
+     * Sets minimum value of considered pixels.
+     * Checks if the pixel in the mask is black, to determine returning
+     * the processed pixel or not.
+     * @param pixel array of pixel to process
+     * @param maskPixel mask pixel array
+     * @param index index of pixel to be processed
+     * @param width of image
+     * @param height of image
+     * @return processed pixel
+     */
     @Override
     protected int calculate(int[] pixel, int[] maskPixel, int index, int width, int height) {
         ArrayList<Integer> neededForProcess = new ArrayList<>();

@@ -16,6 +16,7 @@ public class BlurFilter extends AreaFilter {
 
     /**
      * Considers the color values in range of the radius around the pixel.
+     * Sets the average to the pixel.
      * Checks if the pixel in the mask is black, to determine returning
      * the processed pixel or not.
      * @param pixel array of pixel to process
@@ -23,7 +24,7 @@ public class BlurFilter extends AreaFilter {
      * @param index index of pixel to be processed
      * @param width of image
      * @param height of image
-     * @return
+     * @return blurred pixel
      */
     @Override
     protected int calculate(int[] pixel, int[] maskPixel, int index, int width, int height) {

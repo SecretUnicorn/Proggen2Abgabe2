@@ -4,6 +4,17 @@ import java.util.ArrayList;
 
 public class SharpenFilter extends AreaFilter {
     private static final int radius = 1;
+
+    /**
+     * Considers every pixel in the fixed {@link #radius}.
+     * And tries to highlight the pixel.
+     * @param pixel array of pixel to process
+     * @param maskPixel mask pixel array
+     * @param index index of pixel to be processed
+     * @param width of image
+     * @param height of image
+     * @return processed pixel
+     */
     @Override
     protected int calculate(int[] pixel, int[] maskPixel, int index, int width, int height) {
 

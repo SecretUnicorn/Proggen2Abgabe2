@@ -2,6 +2,11 @@ package Filter;
 
 public class InvertFilter extends PixelFilter {
 
+    /**
+     * Calculates opposite colorValue of this pixel.
+     * @param colorPixel value to be processed
+     * @return inverted pixel
+     */
     @Override
     protected int calculate(int colorPixel) {
         int r = ImageHelper.getRed(colorPixel);

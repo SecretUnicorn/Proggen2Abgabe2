@@ -1,6 +1,13 @@
 package Filter;
 
 public class MonochromFilter extends PixelFilter {
+
+    /**
+     * Extract red, green blue value and creates a grey value.
+     * @param colorPixel value to be processed
+     * @return grey pixel
+     * @see ImageHelper#setGreyPixel(int)
+     */
     @Override
     protected int calculate(int colorPixel) {
         int r = ImageHelper.getRed(colorPixel);

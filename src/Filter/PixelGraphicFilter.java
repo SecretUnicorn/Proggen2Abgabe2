@@ -10,6 +10,10 @@ public class PixelGraphicFilter extends AreaFilter {
     private int middlePixel;
     private boolean isEven;
 
+    /**
+     * Constructor of PixelGraphicFilter.
+     * @param blockWidth size of blocks to set
+     */
     public PixelGraphicFilter(int blockWidth) {
         this.isEven = blockWidth % 2 == 0;
         this.blockWidth = blockWidth;
@@ -18,6 +22,11 @@ public class PixelGraphicFilter extends AreaFilter {
 
     }
 
+    /**
+     * Overriden process method, to jump from block to block.
+     * @param image can contain variable amount of images, if a mask is intended
+     * @return processed image
+     */
     @Override
     public BufferedImage process(BufferedImage... image) {
         BufferedImage image1, image2;
@@ -50,6 +59,15 @@ public class PixelGraphicFilter extends AreaFilter {
         return null;
     }
 
+    /**
+     * Sets a block of pixel to the average color.
+     * @param pixel array of pixel to process
+     * @param maskPixel mask pixel array
+     * @param index index of pixel to be processed
+     * @param width of image
+     * @param height of image
+     * @return value of center pixel of this block
+     */
     @Override
     protected int calculate(int[] pixel, int[] maskPixel, int index, int width, int height) {
         ArrayList<Integer> neededForProcess = new ArrayList<>();
