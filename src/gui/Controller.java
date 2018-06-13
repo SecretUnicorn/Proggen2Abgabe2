@@ -67,6 +67,8 @@ public class Controller implements Initializable {
 
     public ColorPicker colorReplacement1;
     public ColorPicker colorReplacement2;
+    public ChoiceBox choiceMinMax;
+    public ChoiceBox choiceMono;
 
     public TextField textThreshold;
     public TextField textPixel;
@@ -91,6 +93,7 @@ public class Controller implements Initializable {
     public BufferedImage outputSave = null;
 
 
+
     Service service = new ProcessService();
 
     @Override
@@ -99,6 +102,14 @@ public class Controller implements Initializable {
         toggleBandBlue.setToggleGroup(COLORBANDGROUP);
         toggleBandGreen.setToggleGroup(COLORBANDGROUP);
         toggleBandRed.setToggleGroup(COLORBANDGROUP);
+
+        choiceMinMax.getItems().add("Min");
+        choiceMinMax.getItems().add("Max");
+        choiceMinMax.getSelectionModel().selectFirst();
+        choiceMono.getItems().add("Monochrome");
+        choiceMono.getItems().add("Sepia");
+        choiceMono.getItems().add("Cyanotype");
+        choiceMono.getSelectionModel().selectFirst();
 
         //EventHandler
         colorReplacement1.addEventHandler(ActionEvent.ACTION, new colorHandler());
@@ -393,7 +404,15 @@ public class Controller implements Initializable {
                 additional = textThreshold.getText();
                 added = true;
             } else if (e.getSource().equals(addMono)) {
-                ((ChainFilter) chainfilterNormal).addFilter(new MonochromFilter());
+                String choiceMonoValue = (String) choiceMono.getValue();
+                if (choiceMonoValue.equals("Sepia")) {
+                    ((ChainFilter) chainfilterNormal).addFilter(new MonochromFilter(MonoType.SEPIA));
+                } else if (choiceMonoValue.equals("Monochrome")) {
+                    ((ChainFilter) chainfilterNormal).addFilter(new MonochromFilter(MonoType.MONOCHROME));
+                } else {
+                    ((ChainFilter) chainfilterNormal).addFilter(new MonochromFilter(MonoType.CYANOTYPE));
+                }
+
                 added = true;
             } else if (e.getSource().equals(addInvert)) {
                 ((ChainFilter) chainfilterNormal).addFilter(new InvertFilter());
@@ -403,7 +422,12 @@ public class Controller implements Initializable {
                 added = true;
             } else if (e.getSource().equals(addMinimum)) {
                 int pixelRadius = (int) sliderMinimum.getValue();
-                ((ChainFilter) chainfilterNormal).addFilter(new MinimumFilter(pixelRadius));
+                String choiceMinMaxValue = (String) choiceMinMax.getValue();
+                if (choiceMinMaxValue.equals("Min")) {
+                    ((ChainFilter) chainfilterNormal).addFilter(new MinMaxFilter(pixelRadius, false));
+                } else {
+                    ((ChainFilter) chainfilterNormal).addFilter(new MinMaxFilter(pixelRadius, true));
+                }
                 additional += pixelRadius;
                 added = true;
             } else if (e.getSource().equals(addSharpen)) {

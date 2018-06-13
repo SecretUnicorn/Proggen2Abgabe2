@@ -94,10 +94,14 @@ public class MainController {
         HashMap<String,Filter> filter = new HashMap<String,Filter>();
         filter.put("blur_3", new BlurFilter(3));
         filter.put("blur_5", new BlurFilter(5));
-        filter.put("minimum_3", new MinimumFilter(3));
-        filter.put("minimum_5", new MinimumFilter(5));
+        filter.put("min_3", new MinMaxFilter(3, false));
+        filter.put("min_5", new MinMaxFilter(5, false));
+        filter.put("max_3", new MinMaxFilter(3, true));
+        filter.put("max_5", new MinMaxFilter(5, true));
         filter.put("invert", new InvertFilter());
-        filter.put("monochrome", new MonochromFilter());
+        filter.put("monochrome", new MonochromFilter(MonoType.MONOCHROME));
+        filter.put("sepia", new MonochromFilter(MonoType.SEPIA));
+        filter.put("cyanotype", new MonochromFilter(MonoType.CYANOTYPE));
         filter.put("colorband_red", new ColorBandFilter(ColorBand.RED));
         filter.put("colorband_green", new ColorBandFilter(ColorBand.GREEN));
         filter.put("colorband_blue", new ColorBandFilter(ColorBand.BLUE));

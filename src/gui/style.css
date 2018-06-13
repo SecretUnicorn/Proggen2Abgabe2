@@ -48,3 +48,37 @@
     -fx-padding: 3;
     -fx-border-radius: 0;
 }
+
+.choice-box .context-menu {
+    -fx-background-color: #090a0c,
+    linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+    linear-gradient(#20262b, #191d22),
+    radial-gradient(center 50% 0%, radius 100%, rgba(114, 131, 148, 0.9), rgba(255, 255, 255, 0));
+    -fx-font-size: 10px
+}
+
+.choice-box .menu-item:focused {
+    -fx-background-color: white;
+}
+
+.choice-box .menu-item > .label {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+}
+
+.choice-box .menu-item:focused > .label {
+    -fx-text-fill: black;
+}
+
+.choice-box {
+    -fx-background-color: #090a0c,
+    linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+    linear-gradient(#20262b, #191d22),
+    radial-gradient(center 50% 0%, radius 100%, rgba(114, 131, 148, 0.9), rgba(255, 255, 255, 0));
+    -fx-mark-color: white;
+    -fx-font-size: 10px;
+}
+
+.choice-box > .label {
+    -fx-text-fill: white;
+}

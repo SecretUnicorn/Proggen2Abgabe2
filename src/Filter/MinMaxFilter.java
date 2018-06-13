@@ -2,22 +2,23 @@ package Filter;
 
 import java.util.ArrayList;
 
-public class MinimumFilter extends AreaFilter {
+public class MinMaxFilter extends AreaFilter {
 
     private int radius;
-
+    private boolean isMax;
 
     /**
      * Constructor of MinimumFilter.
      * @param radius initializes the radius of pixels to calculate
      */
-    public MinimumFilter(int radius) {
+    public MinMaxFilter(int radius, boolean isMax) {
         this.radius = radius;
+        this.isMax = isMax;
     }
 
     /**
      * Considers the color values in range of the radius around the pixel.
-     * Sets minimum value of considered pixels.
+     * Sets minimum or maximum value of considered pixels.
      * Checks if the pixel in the mask is black, to determine returning
      * the processed pixel or not.
      * @param pixel array of pixel to process
@@ -46,14 +47,26 @@ public class MinimumFilter extends AreaFilter {
             int checkRed = ImageHelper.getRed(neededForProcess.get(it));
             int checkGreen = ImageHelper.getGreen(neededForProcess.get(it));
             int checkBlue = ImageHelper.getBlue(neededForProcess.get(it));
-            if (checkRed < minvalueRed) {
-                minvalueRed = checkRed;
-            }
-            if (checkGreen < minvalueGreen) {
-                minvalueGreen = checkGreen;
-            }
-            if (checkBlue < minvalueBlue) {
-                minvalueBlue = checkBlue;
+            if (!isMax) {
+                if (checkRed < minvalueRed) {
+                    minvalueRed = checkRed;
+                }
+                if (checkGreen < minvalueGreen) {
+                    minvalueGreen = checkGreen;
+                }
+                if (checkBlue < minvalueBlue) {
+                    minvalueBlue = checkBlue;
+                }
+            } else {
+                if (checkRed > minvalueRed) {
+                    minvalueRed = checkRed;
+                }
+                if (checkGreen > minvalueGreen) {
+                    minvalueGreen = checkGreen;
+                }
+                if (checkBlue > minvalueBlue) {
+                    minvalueBlue = checkBlue;
+                }
             }
         }
         return maskPixel[index] != black ? ImageHelper.setFullColorPixel(minvalueRed, minvalueGreen, minvalueBlue) : pixel[index];
@@ -61,6 +74,11 @@ public class MinimumFilter extends AreaFilter {
 
     @Override
     public String getName() {
-        return "Minimum";
+        if (isMax) {
+            return "Maximum";
+        } else {
+            return "Minimum";
+        }
+
     }
 }
