@@ -4,6 +4,12 @@ import java.awt.image.BufferedImage;
 
 abstract class AreaFilter implements Filter {
 
+    /**
+     * Processes every pixel of an image.
+     * The decision to actually calculate a pixel is done in the {@link #calculate(int[], int[], int, int, int)}
+     * @param image can contain variable amount of images, if a mask is intended
+     * @return
+     */
     @Override
     public BufferedImage process(BufferedImage... image) {
         BufferedImage image1, image2;
@@ -35,6 +41,15 @@ abstract class AreaFilter implements Filter {
         return null;
     }
 
+    /**
+     * Basic calculate, no changes are applied to a pixel.
+     * @param pixel array of pixel to process
+     * @param maskPixel mask pixel array
+     * @param index index of pixel to be processed
+     * @param width of image
+     * @param height of image
+     * @return processed pixel
+     */
     protected int calculate(int[] pixel, int[] maskPixel, int index, int width, int height) {
         return pixel[index];
     }
