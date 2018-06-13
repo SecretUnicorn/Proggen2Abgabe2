@@ -2,6 +2,9 @@ package Filter;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * Helper class which contains methods used by many filters.
+ */
 public class ImageHelper {
 
     /**

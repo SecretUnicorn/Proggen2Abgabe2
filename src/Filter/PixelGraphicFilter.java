@@ -3,6 +3,11 @@ package Filter;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+/**
+ * PixelGraphicFilter extends {@link AreaFilter}
+ * <p>
+ * Sets chunks of blocks to the same color based on the average color from all pixels in that block.
+ */
 public class PixelGraphicFilter extends AreaFilter {
 
     private int blockWidth;
@@ -23,7 +28,7 @@ public class PixelGraphicFilter extends AreaFilter {
     }
 
     /**
-     * Overriden process method, to jump from block to block.
+     * Overridden process method, to jump from block to block.
      * @param image can contain variable amount of images, if a mask is intended
      * @return processed image
      */

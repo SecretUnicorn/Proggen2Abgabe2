@@ -2,6 +2,10 @@ package Filter;
 
 import java.util.ArrayList;
 
+/**
+ * SharpenFilter extends {@link AreaFilter}
+ * Highlights every pixel to create an illusion of sharpness
+ */
 public class SharpenFilter extends AreaFilter {
     private static final int radius = 1;
 

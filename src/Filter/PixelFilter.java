@@ -2,6 +2,10 @@ package Filter;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * Abstract class PixelFilter implements Interface {@link Filter}
+ * Processes every pixel in image step by step.
+ */
 abstract class PixelFilter implements Filter {
     /**
      * Processes every pixel in image.

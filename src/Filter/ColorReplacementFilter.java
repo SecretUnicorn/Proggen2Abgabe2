@@ -2,6 +2,11 @@ package Filter;
 
 import java.util.Random;
 
+/**
+ * ColorReplacementFilter extends {@link PixelFilter}
+ * <p>
+ * Replaces a certain color with another color.
+ */
 public class ColorReplacementFilter extends PixelFilter {
     private int toReplace;
     private int replaceWith;

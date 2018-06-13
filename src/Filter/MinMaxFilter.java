@@ -2,6 +2,11 @@ package Filter;
 
 import java.util.ArrayList;
 
+/**
+ * MinMaxFilter extends {@link AreaFilter}
+ * <p>
+ * Sets pixel to the darkest or brightest pixel that the filter finds
+ */
 public class MinMaxFilter extends AreaFilter {
 
     private int radius;

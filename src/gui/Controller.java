@@ -17,8 +17,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -27,7 +25,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Random;
 import java.util.ResourceBundle;
 
 
@@ -95,8 +92,6 @@ public class Controller implements Initializable {
     public Filter warhol = new ChainFilter();
 
     public BufferedImage outputSave = null;
-
-
 
 
     Service service = new ProcessService();
@@ -184,8 +179,6 @@ public class Controller implements Initializable {
                     sliderValue = (int) ((sliderValue - 1) * 100);
                     textBrightness.setText("+" + sliderValue + "%");
                 }
-
-
             }
         });
 
@@ -285,20 +278,6 @@ public class Controller implements Initializable {
 
             };
         }
-    }
-
-    public void sound(MouseEvent dragEvent) {
-        Random random = new Random();
-        String musicFile;
-        if (random.nextBoolean()) {
-            musicFile = "src/sounds/airhorn.mp3";
-        } else {
-            musicFile = "src/sounds/boing.mp3";
-        }
-
-        Media sound = new Media(new File(musicFile).toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(sound);
-        mediaPlayer.play();
     }
 
     public void changePixel(ActionEvent actionEvent) {
@@ -542,7 +521,7 @@ public class Controller implements Initializable {
         File file = fileChooser.showSaveDialog(stage);
 
         if (file != null) {
-                ImageIO.write(outputSave, "bmp", file);
+            ImageIO.write(outputSave, "bmp", file);
         } else {
             Alert.display("Fehler beim Speichern!", "Es wurde keine Datei gespeichert, da kein korrekter Pfad angegeben wurde");
         }

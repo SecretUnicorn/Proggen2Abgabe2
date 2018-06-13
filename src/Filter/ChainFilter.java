@@ -3,6 +3,12 @@ package Filter;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+/**
+ * Class to apply multiple {@link Filter} to an {@link BufferedImage}.
+ * <p>
+ * Using a mask is optional.
+ * Doing this by step by step.
+ */
 public class ChainFilter implements Filter {
     private ArrayList<Filter> filter = new ArrayList<>();
 

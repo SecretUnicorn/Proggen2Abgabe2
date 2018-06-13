@@ -3,7 +3,8 @@ package Filter;
 import java.awt.image.BufferedImage;
 
 /**
- * Abstract class AreaFilter implements Interface {@link Filter}
+ * Abstract class AreaFilter implements Interface {@link Filter}.
+ * Processes every pixel of an image while considering other pixels from the image
  */
 abstract class AreaFilter implements Filter {
 

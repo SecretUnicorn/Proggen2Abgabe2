@@ -2,6 +2,9 @@ package Filter;
 
 import java.util.Random;
 
+/**
+ * ???
+ */
 public class PixelMutilation extends AreaFilter {
 
     private int radius;

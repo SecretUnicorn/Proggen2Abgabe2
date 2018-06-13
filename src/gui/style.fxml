@@ -120,7 +120,7 @@
                 <Font name="System Bold" size="13.0"/>
             </font>
         </Label>
-        <Label layoutX="444.0" layoutY="6.0" onMouseClicked="#sound" text="Filter">
+        <Label layoutX="444.0" layoutY="6.0" text="Filter">
             <font>
                 <Font size="30.0"/>
             </font>

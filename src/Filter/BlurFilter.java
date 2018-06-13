@@ -2,6 +2,10 @@ package Filter;
 
 import java.util.ArrayList;
 
+/**
+ * BlurFilter extends {@link AreaFilter}.
+ * Sets color of a pixel according to the average color of its neighbors
+ */
 public class BlurFilter extends AreaFilter {
 
     private int radius;

@@ -1,5 +1,10 @@
 package Filter;
 
+/**
+ * ThresholdFilter {@link PixelFilter}
+ * <p>
+ * Sets part of the image to certain shades of grey according to the user input
+ */
 public class ThresholdFilter extends PixelFilter {
 
     private int[] greyValue;
@@ -38,7 +43,7 @@ public class ThresholdFilter extends PixelFilter {
                 if (i < greyValue.length - 1) {
                     if (brightness >= greyValue[i] && brightness < greyValue[i + 1]) {
                         //int value = greyValue[i] + (greyValue[i + 1] - greyValue[i]) / 2;
-                         int value = (greyValue[i] + greyValue[i + 1]) / 2;
+                        int value = (greyValue[i] + greyValue[i + 1]) / 2;
                         processedPixel = ImageHelper.setGreyPixel(value);
                     }
                 }
