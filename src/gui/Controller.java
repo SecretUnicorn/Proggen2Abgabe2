@@ -51,6 +51,7 @@ public class Controller implements Initializable {
     public Button btnSave;
     public Button addSharpen;
     public Button addMinimum;
+    public Button addBrightness;
 
     public ToggleButton toggleBandRed;
     public ToggleButton toggleBandBlue;
@@ -60,10 +61,12 @@ public class Controller implements Initializable {
     public Label textUrlImage;
     public Label textUrlMask;
     public Label lblFilterAnwenden;
+    public Label textBrightness;
 
     public Slider sliderBlur;
     public Slider sliderPixel;
     public Slider sliderMinimum;
+    public Slider sliderBrightness;
 
     public ColorPicker colorReplacement1;
     public ColorPicker colorReplacement2;
@@ -74,6 +77,7 @@ public class Controller implements Initializable {
     public TextField textPixel;
     public TextField textBlur;
     public TextField textMinimum;
+
 
     public ProgressIndicator loading;
 
@@ -91,6 +95,7 @@ public class Controller implements Initializable {
     public Filter warhol = new ChainFilter();
 
     public BufferedImage outputSave = null;
+
 
 
 
@@ -124,6 +129,7 @@ public class Controller implements Initializable {
         addMutilation.addEventHandler(ActionEvent.ACTION, new AddHandler());
         addMinimum.addEventHandler(ActionEvent.ACTION, new AddHandler());
         addSharpen.addEventHandler(ActionEvent.ACTION, new AddHandler());
+        addBrightness.addEventHandler(ActionEvent.ACTION, new AddHandler());
         imgInput.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Image uploadImage = selectImage(1);
             if (uploadImage != null) {
@@ -167,6 +173,21 @@ public class Controller implements Initializable {
 
             }
         });
+        sliderBrightness.valueProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+                double sliderValue = sliderBrightness.getValue();
+                if (sliderValue < 1) {
+                    sliderValue = (int) ((1 - sliderValue) * 100);
+                    textBrightness.setText("-" + sliderValue + "%");
+                } else {
+                    sliderValue = (int) ((sliderValue - 1) * 100);
+                    textBrightness.setText("+" + sliderValue + "%");
+                }
+
+
+            }
+        });
 
         service.setOnSucceeded(e -> {
             service.reset();
@@ -190,6 +211,7 @@ public class Controller implements Initializable {
         addMutilation.getStyleClass().add("add");
         addMinimum.getStyleClass().add("add");
         addSharpen.getStyleClass().add("add");
+        addBrightness.getStyleClass().add("add");
     }
 
     public void applyChainFilter(MouseEvent mouseEvent) {
@@ -438,6 +460,11 @@ public class Controller implements Initializable {
                 } else {
                     Alert.display("TOO MUCH!", "Der SharpenFilter darf lediglich 2 Mal angewendet werden! Sorry ¯\\_(ツ)_/¯");
                 }
+            } else if (e.getSource().equals(addBrightness)) {
+                double amount = sliderBrightness.getValue();
+                ((ChainFilter) chainfilterNormal).addFilter(new BrightnessFilter(amount));
+                additional += textBrightness.getText();
+                added = true;
             }
             if (added) {
                 StringBuilder sb = new StringBuilder();

@@ -6,8 +6,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
-// implements EventHandler<ActionEvent>
+/**
+ * GUI start class
+ *
+ * @author Ahlers & Folwarzny
+ */
 public class Main extends Application  {
 
     private static Stage primaryStage;
@@ -17,7 +20,6 @@ public class Main extends Application  {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        //primaryStage.initStyle(StageStyle.UNDECORATED);
         setPrimaryStage(primaryStage);
         Parent root = FXMLLoader.load(getClass().getResource("style.fxml"));
 

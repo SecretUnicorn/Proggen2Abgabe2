@@ -2,6 +2,9 @@ package Filter;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * Abstract class AreaFilter implements Interface {@link Filter}
+ */
 abstract class AreaFilter implements Filter {
 
     /**

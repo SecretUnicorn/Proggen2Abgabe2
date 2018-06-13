@@ -1,5 +1,10 @@
 package Filter;
 
+/**
+ * InvertFilter extends {@link PixelFilter}
+ * <p>
+ * Inverts the colorvalues.
+ */
 public class InvertFilter extends PixelFilter {
 
     /**

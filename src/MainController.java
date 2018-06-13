@@ -98,6 +98,10 @@ public class MainController {
         filter.put("min_5", new MinMaxFilter(5, false));
         filter.put("max_3", new MinMaxFilter(3, true));
         filter.put("max_5", new MinMaxFilter(5, true));
+        filter.put("brightness_20", new BrightnessFilter(0.2));
+        filter.put("brightness_60", new BrightnessFilter(1.6));
+        filter.put("darken_20", new BrightnessFilter(0.8));
+        filter.put("darken_60", new BrightnessFilter(0.4));
         filter.put("invert", new InvertFilter());
         filter.put("monochrome", new MonochromFilter(MonoType.MONOCHROME));
         filter.put("sepia", new MonochromFilter(MonoType.SEPIA));

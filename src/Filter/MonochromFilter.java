@@ -1,7 +1,11 @@
 package Filter;
 
-import gui.Alert;
-
+/**
+ * MonochromFilter extends {@link PixelFilter}
+ * <p>
+ * Turns the image into one of three monochromstyles.
+ * {@link MonoType} are the possible styles
+ */
 public class MonochromFilter extends PixelFilter {
 
     private MonoType monoType;
