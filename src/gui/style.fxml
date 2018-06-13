@@ -38,8 +38,8 @@
                 <DropShadow/>
             </effect>
         </ImageView>
-        <Button fx:id="btbUploadMask" layoutX="83.0" layoutY="370.0" mnemonicParsing="false" onAction="#uploadMask"
-                text="upload Mask..."/>
+        <Button fx:id="btbUploadMask" layoutX="63.0" layoutY="370.0" mnemonicParsing="false" onAction="#uploadMask"
+                text="Maske auswählen..."/>
         <Label layoutX="31.0" layoutY="261.0" text="Mask"/>
         <Label layoutX="28.0" layoutY="53.0" text="Input Image"/>
         <Button fx:id="btnClear" layoutX="473.0" layoutY="452.0" mnemonicParsing="false" onMouseClicked="#reset"
@@ -50,8 +50,8 @@
         <Label layoutX="321.0" layoutY="115.0" text="Pixelfilter"/>
         <Slider fx:id="sliderPixel" blockIncrement="1.0" layoutX="395.0" layoutY="113.0" minorTickCount="5"
                 prefHeight="38.0" prefWidth="200.0" showTickLabels="true" showTickMarks="true"/>
-        <Button fx:id="btbUploadImage" layoutX="86.0" layoutY="141.0" mnemonicParsing="false" onAction="#uploadImage"
-                styleClass="buttonMain" text="upload Image..."/>
+        <Button fx:id="btbUploadImage" layoutX="76.0" layoutY="141.0" mnemonicParsing="false" onAction="#uploadImage"
+                styleClass="buttonMain" text="Bild auswählen..."/>
         <Separator layoutX="303.0" layoutY="239.0" orientation="VERTICAL" prefHeight="200.0" scaleY="4.0"/>
         <Separator layoutX="687.0" layoutY="249.0" orientation="VERTICAL" prefHeight="200.0" scaleY="4.0"/>
         <Separator layoutX="305.0" layoutY="99.0" prefHeight="10.0" prefWidth="383.0"/>
@@ -178,8 +178,8 @@
         <Label layoutX="435.0" layoutY="391.0" text="Invert"/>
         <Button fx:id="addInvert" layoutX="476.0" layoutY="386.0" mnemonicParsing="false" prefHeight="1.0"
                 prefWidth="6.0" text="+" textAlignment="CENTER"/>
-        <Label layoutX="527.0" layoutY="391.0" text="???"/>
-        <Button fx:id="addMutilation" layoutX="558.0" layoutY="386.0" mnemonicParsing="false" prefHeight="1.0"
+        <Label layoutX="625.0" layoutY="391.0" text="???"/>
+        <Button fx:id="addMutilation" layoutX="656.0" layoutY="386.0" mnemonicParsing="false" prefHeight="1.0"
                 prefWidth="6.0" text="+" textAlignment="CENTER"/>
         <ProgressIndicator fx:id="loading" layoutX="927.0" layoutY="200.0" scaleX="3.0" scaleY="3.0" visible="false"/>
         <Label layoutX="321.0" layoutY="165.0" text="Minimum"/>
@@ -195,5 +195,8 @@
             </font>
         </TextField>
         <Separator layoutX="305.0" layoutY="200.0" prefHeight="4.0" prefWidth="383.0"/>
+        <Label layoutX="522.0" layoutY="391.0" text="Sharpen"/>
+        <Button fx:id="addSharpen" layoutX="578.0" layoutY="386.0" mnemonicParsing="false" prefHeight="1.0"
+                prefWidth="6.0" text="+" textAlignment="CENTER"/>
     </children>
 </Pane>

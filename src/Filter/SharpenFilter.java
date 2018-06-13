@@ -47,4 +47,9 @@ public class SharpenFilter extends AreaFilter {
         valueBlue = Math.round(ImageHelper.rangeChecker(valueBlue) / 1.1F);
         return maskPixel[index] != black ? ImageHelper.setFullColorPixel(valueRed, valueGreen, valueBlue) : pixel[index];
     }
+
+    @Override
+    public String getName() {
+        return "Sharpen";
+    }
 }

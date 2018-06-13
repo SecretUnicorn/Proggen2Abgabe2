@@ -49,6 +49,8 @@ public class Controller implements Initializable {
     public Button btbUploadMask;
     public Button btbUploadImage;
     public Button btnSave;
+    public Button addSharpen;
+    public Button addMinimum;
 
     public ToggleButton toggleBandRed;
     public ToggleButton toggleBandBlue;
@@ -61,6 +63,7 @@ public class Controller implements Initializable {
 
     public Slider sliderBlur;
     public Slider sliderPixel;
+    public Slider sliderMinimum;
 
     public ColorPicker colorReplacement1;
     public ColorPicker colorReplacement2;
@@ -68,6 +71,7 @@ public class Controller implements Initializable {
     public TextField textThreshold;
     public TextField textPixel;
     public TextField textBlur;
+    public TextField textMinimum;
 
     public ProgressIndicator loading;
 
@@ -76,16 +80,16 @@ public class Controller implements Initializable {
 
     public final ToggleGroup COLORBANDGROUP = new ToggleGroup();
 
+    public int sharpAmount = 0;
     final int black = 0x000000;
     final int white = 0xFFFFFF;
 
     public Filter chainfilterNormal = new ChainFilter();
     public Filter chainfilterProcess = new ChainFilter();
     public Filter warhol = new ChainFilter();
+
     public BufferedImage outputSave = null;
-    public Slider sliderMinimum;
-    public Button addMinimum;
-    public TextField textMinimum;
+
 
     Service service = new ProcessService();
 
@@ -108,15 +112,25 @@ public class Controller implements Initializable {
         addInvert.addEventHandler(ActionEvent.ACTION, new AddHandler());
         addMutilation.addEventHandler(ActionEvent.ACTION, new AddHandler());
         addMinimum.addEventHandler(ActionEvent.ACTION, new AddHandler());
+        addSharpen.addEventHandler(ActionEvent.ACTION, new AddHandler());
         imgInput.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Image uploadImage = selectImage(1);
-            imgInput.setImage(uploadImage);
-            btbUploadImage.setVisible(false);
+            if (uploadImage != null) {
+                imgInput.setImage(uploadImage);
+                btbUploadImage.setVisible(false);
+            } else {
+                Alert.display("Kein Bild ausgewählt", "Es wurde kein Bild ausgewählt!");
+            }
         });
         imgMask.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             Image uploadMask = selectImage(2);
-            imgMask.setImage(uploadMask);
-            btbUploadMask.setVisible(false);
+            if (uploadMask != null) {
+                imgMask.setImage(uploadMask);
+                btbUploadMask.setVisible(false);
+            } else {
+                Alert.display("Kein Bild ausgewählt", "Es wurde kein Bild ausgewählt!");
+            }
+
         });
         sliderBlur.valueProperty().addListener(new ChangeListener() {
             @Override
@@ -145,6 +159,7 @@ public class Controller implements Initializable {
 
         service.setOnSucceeded(e -> {
             service.reset();
+            sharpAmount = 0;
             loading.setVisible(false);
 
         });
@@ -163,6 +178,7 @@ public class Controller implements Initializable {
         addInvert.getStyleClass().add("add");
         addMutilation.getStyleClass().add("add");
         addMinimum.getStyleClass().add("add");
+        addSharpen.getStyleClass().add("add");
     }
 
     public void applyChainFilter(MouseEvent mouseEvent) {
@@ -390,6 +406,14 @@ public class Controller implements Initializable {
                 ((ChainFilter) chainfilterNormal).addFilter(new MinimumFilter(pixelRadius));
                 additional += pixelRadius;
                 added = true;
+            } else if (e.getSource().equals(addSharpen)) {
+                if (sharpAmount < 2) {
+                    ((ChainFilter) chainfilterNormal).addFilter(new SharpenFilter());
+                    sharpAmount++;
+                    added = true;
+                } else {
+                    Alert.display("TOO MUCH!", "Der SharpenFilter darf lediglich 2 Mal angewendet werden! Sorry ¯\\_(ツ)_/¯");
+                }
             }
             if (added) {
                 StringBuilder sb = new StringBuilder();
@@ -411,15 +435,18 @@ public class Controller implements Initializable {
         if (uploadImage != null) {
             btbUploadImage.setVisible(false);
             imgInput.setImage(uploadImage);
+        } else {
+            Alert.display("Kein Bild ausgewählt", "Es wurde kein Bild ausgewählt!");
         }
     }
 
     public void uploadMask(ActionEvent actionEvent) {
         Image uploadImage = selectImage(2);
-        ;
         if (uploadImage != null) {
             btbUploadMask.setVisible(false);
             imgMask.setImage(uploadImage);
+        } else {
+            Alert.display("Kein Bild ausgewählt", "Es wurde kein Bild ausgewählt!");
         }
     }
 
