@@ -3,6 +3,13 @@ package Filter;
 import java.awt.image.BufferedImage;
 
 abstract class PixelFilter implements Filter {
+    /**
+     * Processes every pixel in image.
+     * Function will process every pixel in image, if a mask is given,
+     * it checks if the value equals black and then does not process the pixel
+     * @param image can contain variable amount of images, if a mask is intended
+     * @return processed image
+     */
     @Override
     public BufferedImage process(BufferedImage... image) {
         BufferedImage image1, image2;
@@ -44,6 +51,11 @@ abstract class PixelFilter implements Filter {
         return null;
     }
 
+    /**
+     * Basic calculate, no changes are applied to a pixel.
+     * @param colorPixel value to be processed
+     * @return same pixel
+     */
     protected int calculate(int colorPixel) {
         return colorPixel;
     }
