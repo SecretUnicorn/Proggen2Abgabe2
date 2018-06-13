@@ -120,6 +120,16 @@ public class MainController {
         filter.put("warhol", warhol);
         filter.put("sharpen",new SharpenFilter());
         filter.put("mutilation", new PixelMutilation());
+        Filter chainHangLow = new ChainFilter();
+        ((ChainFilter) chainHangLow).addFilter(new ThresholdFilter(45, 90, 135, 180));
+        ((ChainFilter) chainHangLow).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(255)));
+        ((ChainFilter) chainHangLow).addFilter(new ColorReplacementFilter(ImageHelper.setGreyPixel(0)));
+        ((ChainFilter) chainHangLow).addFilter(new SharpenFilter());
+        ((ChainFilter) chainHangLow).addFilter(new SharpenFilter());
+        ((ChainFilter) chainHangLow).addFilter(new SharpenFilter());
+        ((ChainFilter) chainHangLow).addFilter(new InvertFilter());
+        ((ChainFilter) chainHangLow).addFilter(new PixelGraphicFilter(5));
+        filter.put("chainhanglow",chainHangLow);
         return filter;
     }
 
