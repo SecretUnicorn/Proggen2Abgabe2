@@ -6,7 +6,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-// implements EventHandler<ActionEvent>
+/**
+ * GUI start class
+ *
+ * @author Ahlers & Folwarzny
+ */
 public class Main extends Application  {
 
     private static Stage primaryStage;
@@ -14,17 +18,18 @@ public class Main extends Application  {
         launch(args);
     }
 
-    /*
-    STAGE -> SCENE
-     */
-
     @Override
     public void start(Stage primaryStage) throws Exception{
         setPrimaryStage(primaryStage);
         Parent root = FXMLLoader.load(getClass().getResource("style.fxml"));
-        primaryStage.setTitle("Programmieren 2 Abgabe");
-        Scene scene = new Scene(root,921,457);
+
+        root.setStyle("-fx-background-image: url(img/background2.jpg)");
+        primaryStage.setTitle("Programmieren 2 Abgabe (Ahlers & Folwarzny)");
+        Scene scene = new Scene(root, 1229, 620);
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
