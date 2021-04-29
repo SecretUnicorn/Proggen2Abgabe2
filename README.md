@@ -1,6 +1,6 @@
 # Proggen2Abgabe2
 
-Dies ist die Abgabe des zweiten Stehgreifprojekts von Oliver Daniel Folwarzny und Nicklas Benuar Ahlers. 
+Dies ist die Abgabe des zweiten Stehgreifprojekts von Oliver F. und Nicklas A. 
 Sie können die Funktion der Filter einfach mit der GUI testen indem Sie die Werte einstellen, Sie dann hinzufügen und dann die Chain anwenden.
 Wenn Sie lieber die Abgabe als Konsolenprogramm überprüfen wollen, so führen Sie MainController.java aus und übergeben Sie entsprechend die Bilder und die Filter.
 Für Bilder und Filter bitte den Pfad als src/Testimages/bild.bmp  als Argument übergeben.
